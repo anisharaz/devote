@@ -1,14 +1,22 @@
 {
   "name": "@repo/ui",
   "version": "1.0.0",
-  "exports": {
-    "./indexcss": "./dist/index.css",
-    "./index": "./src/index.tsx"
-  },
   "scripts": {
-    "build": "tsup",
-    "dev": "tsup ./src/index.tsx --watch"
+    "build": "tsup --dts",
+    "dev": "tsup ./src/index.tsx --watch --dts"
   },
+  "main": "dist/index.js",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./indexcss": "./dist/index.css"
+  },
+  "files": [
+    "dist/"
+  ],
   "devDependencies": {
     "@repo/typescript-config": "*",
     "@repo/tailwindcss-config": "*",
