@@ -1,3 +1,10 @@
+import "@repo/ui/indexcss";
+import { NavBar } from "@repo/ui/index";
 export default function Home() {
-  return <div className="bg-red-400 p-3">working</div>;
+  return (
+    <>
+      <NavBar />
+      <div className="bg-red-400">Main</div>
+    </>
+  );
 }

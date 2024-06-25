@@ -1,5 +1,6 @@
 {
   "name": "@repo/typescript-config",
+  "version": "1.0.0",
   "files": [
     "base.json",
     "nextjs.json"

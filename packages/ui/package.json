@@ -1,0 +1,30 @@
+{
+  "name": "@repo/ui",
+  "version": "1.0.0",
+  "exports": {
+    "./indexcss": "./dist/index.css",
+    "./index": "./src/index.tsx"
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup ./src/index.tsx --watch"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "*",
+    "@repo/tailwindcss-config": "*",
+    "autoprefixer": "^10.4.19",
+    "postcss": "^8.4.38",
+    "tailwindcss": "^3.4.4",
+    "tsup": "^8.1.0"
+  },
+  "dependencies": {
+    "react": "^18.3.1"
+  },
+  "include": [
+    "src"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
+}
