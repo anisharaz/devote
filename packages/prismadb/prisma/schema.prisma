@@ -1,0 +1,52 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["multiSchema"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = "postgresql://postgres:devote@localhost:5432/postgres"
+  schemas  = ["identity", "verification", "voting"]
+}
+
+model admin {
+  id       String @id @default(cuid())
+  name     String
+  email    String @unique
+  password String
+  role     String
+
+  @@schema("identity")
+}
+
+enum VerificationStatus {
+  PENDING
+  APPROVED
+
+  @@schema("identity")
+}
+
+model voters {
+  voterid       String             @id @default(cuid())
+  name          String
+  email         String
+  phone         String
+  aadhar        String
+  dob           DateTime
+  streetaddress String
+  pincode       String
+  state         String
+  city          String
+  identitycert  String
+  identityjwt   String
+  walletaddress String?            @unique
+  verification  VerificationStatus @default(PENDING)
+
+  @@schema("identity")
+}

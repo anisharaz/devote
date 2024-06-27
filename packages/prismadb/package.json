@@ -1,0 +1,22 @@
+{
+  "name": "@repo/prismadb",
+  "version": "1.0.0",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsup --dts",
+    "dev": "tsup ./src/index.ts --watch --dts"
+  },
+  "exports": {
+    ".": {
+      "default": "./dist/index.js"
+    },
+    "./indexcss": "./dist/index.css"
+  },
+  "dependencies": {
+    "@prisma/client": "5.16.1",
+    "@repo/typescript-config": "*",
+    "prisma": "^5.16.1",
+    "tsup": "^8.1.0"
+  },
+  "devDependencies": {}
+}

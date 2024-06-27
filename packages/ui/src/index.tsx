@@ -1,2 +1,4 @@
+import { Button } from "./components/ui/button";
+import { NavBar } from "./elements/NavBar/NavBar";
 import "./global.css";
-export { NavBar } from "./components/NavBar";
+export { Button, NavBar };
