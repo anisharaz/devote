@@ -33,9 +33,6 @@ export default function RootLayout({
           <NavBar>
             <div className="flex gap-2 justify-center items-center">
               <Button>
-                <Link href={"/myidentity"}>MY Identity</Link>
-              </Button>
-              <Button>
                 <Link href={"/registrar"}>Registrar</Link>
               </Button>
               <WalletButton />

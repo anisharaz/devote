@@ -55,3 +55,24 @@ export async function CreateVoter(VoderData: VoterData) {
     });
   }
 }
+
+export async function GetVoter(PublicKey: string) {
+  const user = await prisma.voters.findUnique({
+    where: {
+      walletaddress: PublicKey,
+    },
+  });
+  return user;
+}
+
+export async function GetIdentityCert(aadhar: string) {
+  const voter = await prisma.voters.findUnique({
+    where: {
+      aadhar: aadhar,
+    },
+  });
+  if (voter) {
+    return Promise.resolve(voter.identitycert);
+  }
+  return Promise.resolve(null);
+}

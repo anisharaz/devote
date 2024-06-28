@@ -6,7 +6,7 @@ import WalletButton from "./Walletbutton";
 import { useVoter } from "../hooks/useVoter";
 
 export function HomePageMainAction() {
-  const { connected } = useWallet();
+  const { connected, publicKey } = useWallet();
   const voter = useVoter();
 
   return (
@@ -17,7 +17,7 @@ export function HomePageMainAction() {
       {connected ? (
         <div className="flex gap-4">
           <Button size={"lg"} variant={"secondary"}>
-            <Link href={"/myidentity"}>MY Identity</Link>
+            <Link href={`/voteridentity/${publicKey}`}>MY Identity</Link>
           </Button>
           <div className="h-11 flex items-center text-white text-2xl underline underline-offset-4">
             <div>
