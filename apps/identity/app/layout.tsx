@@ -1,8 +1,12 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
-import "./globals.css";
 import WalletContext from "./context/Walletcontext";
-
+import { Button, NavBar } from "@repo/ui";
+import Link from "next/link";
+import WalletButton from "./components/Walletbutton";
+import "./globals.css";
+import "@repo/ui/indexcss";
+import "@solana/wallet-adapter-react-ui/styles.css";
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
@@ -25,7 +29,21 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        <WalletContext>{children}</WalletContext>
+        <WalletContext>
+          <NavBar>
+            <div className="flex gap-2 justify-center items-center">
+              <Button>
+                <Link href={"/myidentity"}>MY Identity</Link>
+              </Button>
+              <Button>
+                <Link href={"/registrar"}>Registrar</Link>
+              </Button>
+              <WalletButton />
+            </div>
+          </NavBar>
+
+          {children}
+        </WalletContext>
       </body>
     </html>
   );

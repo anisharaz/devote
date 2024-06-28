@@ -11,15 +11,15 @@ export function HomePageMainAction() {
 
   return (
     <>
-      <Button size={"lg"} variant={"secondary"}>
+      <Button size={"lg"}>
         <Link href={"URL_TO_VOTE_SYSTEM"}>Vote A Candidate</Link>
       </Button>
       {connected ? (
         <div className="flex gap-4">
-          <Button size={"lg"}>
+          <Button size={"lg"} variant={"secondary"}>
             <Link href={"/myidentity"}>MY Identity</Link>
           </Button>
-          <div className="h-11 flex items-center text-lime-400 text-2xl underline underline-offset-4">
+          <div className="h-11 flex items-center text-white text-2xl underline underline-offset-4">
             <div>
               <div>User: {voter.name ? voter.name : "Loading..."}</div>
             </div>
