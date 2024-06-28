@@ -11,13 +11,13 @@ export default async function Registrar() {
   const user = await getUser();
   return (
     <>
-      <div className="main-body flex flex-col justify-center items-center">
+      <div className="main-body flex flex-col justify-center items-center p-2">
         {(await isAuthenticated()) ? (
           <div>
             {user?.email == process.env.ADMIN_EMAIL ? (
               <div className="flex flex-col justify-center items-center gap-3">
                 <div>
-                  <Button>
+                  <Button variant={"secondary"}>
                     <LogoutLink>Logout</LogoutLink>
                   </Button>
                 </div>

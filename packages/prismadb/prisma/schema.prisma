@@ -35,16 +35,15 @@ enum VerificationStatus {
 model voters {
   voterid       String             @id @default(cuid())
   name          String
-  email         String
-  phone         String
-  aadhar        String
-  dob           DateTime
+  email         String             @unique
+  phone         String             @unique
+  aadhar        String             @unique
   streetaddress String
   pincode       String
   state         String
   city          String
-  identitycert  String
-  identityjwt   String
+  identitycert  String             @unique
+  identityjwt   String             @unique
   walletaddress String?            @unique
   verification  VerificationStatus @default(PENDING)
 

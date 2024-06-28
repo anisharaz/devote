@@ -2,6 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 .main-body {
-    height: calc(100vh - 4rem);
+    min-height: calc(100vh - 4rem);
     background: radial-gradient(circle, rgb(150, 184, 194) 0%, rgb(214, 5, 211) 100%);
 }
