@@ -38,7 +38,6 @@ export default function RootLayout({
               <WalletButton />
             </div>
           </NavBar>
-
           {children}
         </WalletContext>
       </body>

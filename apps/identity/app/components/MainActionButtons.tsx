@@ -14,6 +14,9 @@ export function HomePageMainAction() {
       <Button size={"lg"}>
         <Link href={"URL_TO_VOTE_SYSTEM"}>Vote A Candidate</Link>
       </Button>
+      <Button size={"lg"}>
+        <Link href={"/downloadidentity"}>Download ID Certificate</Link>
+      </Button>
       {connected ? (
         <div className="flex gap-4">
           <Button size={"lg"} variant={"secondary"}>
