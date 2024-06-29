@@ -2,7 +2,7 @@ import VerificationForm from "./VerificationForm";
 
 function verify() {
   return (
-    <div className="main-body">
+    <div className="main-body flex justify-center items-center">
       <VerificationForm />
     </div>
   );

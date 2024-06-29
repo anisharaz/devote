@@ -3,6 +3,7 @@ import { Button } from "@repo/ui";
 import { useState } from "react";
 import { GetIdentityCert } from "../actions/database";
 import { Loader2 } from "lucide-react";
+import Link from "next/link";
 
 function CertDownloadForm() {
   const [aadhar, setAadhar] = useState("");
@@ -18,7 +19,7 @@ function CertDownloadForm() {
             alert("Enter an Aadhar number");
             return;
           }
-          if (aadhar.length !== 16) {
+          if (aadhar.length < 8) {
             alert("Please enter a valid Aadhar number");
             return;
           }
@@ -35,7 +36,7 @@ function CertDownloadForm() {
         className="flex flex-col gap-6"
       >
         <div>
-          <label htmlFor="aadhar" className="text-lg font-mediu">
+          <label htmlFor="aadhar" className="text-xl text-white font-mediu">
             Aadhar Number
           </label>
           <input
@@ -43,7 +44,7 @@ function CertDownloadForm() {
             id="aadhar"
             value={aadhar}
             onChange={(e) => setAadhar(e.target.value)}
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            className="bg-gray-50 border border-gray-300 text-gray-900 text-lg rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           />
         </div>
         {loading ? (
@@ -63,14 +64,20 @@ function CertDownloadForm() {
       {cert && (
         <>
           <br />
-          <Button type="submit" variant={"secondary"}>
-            <a
-              href={`data:text/plain;charset=utf-8,${cert}`}
-              download={`${aadhar}.cert`}
-            >
-              Download
-            </a>
-          </Button>
+          <div className="text-2xl text-white">Download Before Verify</div>
+          <div className="flex gap-4">
+            <Button type="submit" variant={"secondary"}>
+              <a
+                href={`data:text/plain;charset=utf-8,${cert}`}
+                download={`${aadhar}.cert`}
+              >
+                Download
+              </a>
+            </Button>
+            <Button>
+              <Link href={"/verify"}>Verify Noew</Link>
+            </Button>
+          </div>
         </>
       )}
     </div>
