@@ -2,7 +2,7 @@
 
 import { Button } from "@repo/ui";
 import { useWallet } from "@solana/wallet-adapter-react";
-import { FormEvent, useState } from "react";
+import { useState } from "react";
 import WalletButton from "../components/Walletbutton";
 import { VerifyVoter } from "../actions/database";
 import { Loader2 } from "lucide-react";
