@@ -24,7 +24,9 @@ export function HomePageMainAction() {
           </Button>
           <div className="h-11 flex items-center text-white text-2xl underline underline-offset-4">
             <div>
-              <div>User: {voter.name ? voter.name : "Loading..."}</div>
+              <div className="bg-black p-2 rounded-xl">
+                User: {voter.name ? voter.name : "Loading..."}
+              </div>
             </div>
           </div>
         </div>

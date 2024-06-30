@@ -1,7 +1,10 @@
 "use server";
 import { prisma } from "@repo/prismadb";
 import Jwt from "jsonwebtoken";
-import { generateDigitalSignature } from "../lib/functions";
+import {
+  generateDigitalSignature,
+  validateDigitalSignature,
+} from "../lib/functions";
 
 type VoterData = {
   name: string;
@@ -75,4 +78,58 @@ export async function GetIdentityCert(aadhar: string) {
     return Promise.resolve(voter.identitycert);
   }
   return Promise.resolve(null);
+}
+
+export async function VerifyVoter({
+  Certificate,
+  PublicKey,
+  Aadhar,
+}: {
+  Certificate: string;
+  PublicKey: string;
+  Aadhar: string;
+}) {
+  const voter = await prisma.voters.findUnique({
+    where: {
+      aadhar: Aadhar,
+    },
+    select: {
+      identityjwt: true,
+    },
+  });
+  if (!voter) {
+    return Promise.resolve({
+      success: false,
+      msg: "Invalid Aadhar",
+      VotingCertificate: "",
+    });
+  }
+  const certverify: boolean = validateDigitalSignature(
+    voter.identityjwt,
+    Certificate
+  );
+  if (!certverify) {
+    return Promise.resolve({
+      success: false,
+      msg: "Invalid Certificate",
+      VotingCertificate: "",
+    });
+  }
+  const user = await prisma.voters.update({
+    where: {
+      aadhar: Aadhar,
+    },
+    data: {
+      walletaddress: PublicKey,
+      verification: "APPROVED",
+    },
+  });
+
+  const VotingCertificate = generateDigitalSignature(JSON.stringify(user));
+
+  return Promise.resolve({
+    success: true,
+    msg: "Voter Verified",
+    VotingCertificate: VotingCertificate,
+  });
 }
