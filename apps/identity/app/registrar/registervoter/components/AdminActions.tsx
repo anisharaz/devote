@@ -1,8 +1,8 @@
 "use client";
 import { Button } from "@repo/ui";
 import { useState } from "react";
-import { CreateVoter } from "../../actions/database";
 import { Loader2 } from "lucide-react";
+import { CreateVoter } from "../../../actions/database";
 
 function AdminAction() {
   const [voterData, setVoterData] = useState({

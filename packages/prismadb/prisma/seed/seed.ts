@@ -22,18 +22,21 @@ async function main() {
         statement: "lorem ipsum...",
         image: "img_url",
         levelId: activevoting.id,
+        WalletAddress: "7mpcxFG5CURhM266pWQvqoof55fc3vdRjGheXAW7P3D2",
       },
       {
         name: "CAN_2",
         statement: "bbbbbbblaaaaaa...",
         image: "img_url",
         levelId: activevoting.id,
+        WalletAddress: "3XY4miR949BxoCrfxueidiF3pTEqcY5NyBV49NPZWrqz",
       },
       {
         name: "CAN_3",
         statement: "3rd candidate statement",
         image: "img_url",
         levelId: activevoting.id,
+        WalletAddress: "9RCMoa6J6jCqVEiZTgW3HMQH2QoUPVLxfUwx7fk1cNya",
       },
     ],
   });
