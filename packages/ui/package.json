@@ -2,7 +2,7 @@
   "name": "@repo/ui",
   "version": "1.0.0",
   "scripts": {
-    "build": "tsup --dts",
+    "build": "tsup ./src/index.tsx --dts",
     "dev": "tsup ./src/index.tsx --watch --dts"
   },
   "main": "dist/index.js",

@@ -49,3 +49,39 @@ model voters {
 
   @@schema("identity")
 }
+
+enum ActiveVotingLevelsStatus {
+  PENDING
+  APPROVED
+
+  @@schema("voting")
+}
+
+model ActiveVotingLevels {
+  id         String                   @id @default(cuid())
+  LevelName  String
+  status     ActiveVotingLevelsStatus @default(PENDING)
+  candidates candidates[]
+
+  @@schema("voting")
+}
+
+enum CandidatesStatus {
+  PENDING
+  VERIFIED
+
+  @@schema("voting")
+}
+
+model candidates {
+  id        String             @id @default(cuid())
+  name      String
+  statement String
+  image     String
+  votes     Int                @default(0)
+  levelId   String
+  level     ActiveVotingLevels @relation(fields: [levelId], references: [id])
+  status    CandidatesStatus   @default(PENDING)
+
+  @@schema("voting")
+}

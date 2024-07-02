@@ -11,17 +11,19 @@ export function HomePageMainAction() {
 
   return (
     <>
-      <Button size={"lg"}>
-        <Link href={"URL_TO_VOTE_SYSTEM"}>Vote A Candidate</Link>
-      </Button>
+      <Link href={"/voting"}>
+        <Button size={"lg"}>Vote A Candidate</Button>
+      </Link>
       <Button size={"lg"}>
         <Link href={"/downloadidentity"}>Download ID Certificate</Link>
       </Button>
       {connected ? (
         <div className="flex gap-4">
-          <Button size={"lg"} variant={"secondary"}>
-            <Link href={`/voteridentity/${publicKey}`}>MY Identity</Link>
-          </Button>
+          <Link href={`/voteridentity/${publicKey}`}>
+            <Button size={"lg"} variant={"secondary"}>
+              MY Identity
+            </Button>
+          </Link>
           <div className="h-11 flex items-center text-white text-2xl underline underline-offset-4">
             <div>
               <div className="bg-black p-2 rounded-xl">

@@ -1,12 +1,12 @@
 import { Button } from "@repo/ui";
 import { GetVoter } from "../../actions/database";
 import Link from "next/link";
-import WalletConnectChecker from "./WalletConnectChecker";
+import WalletConnectPipe from "../../pipes/WalletConnectionPipe";
 
 async function MyIdentity({ params }: { params: { PublicKey: string } }) {
   const voter = await GetVoter(params.PublicKey);
   return (
-    <WalletConnectChecker>
+    <WalletConnectPipe title="Connect Wallet To View Identity">
       {!voter ? (
         <div className="main-body flex flex-col items-center p-4 gap-10">
           <div className="flex flex-col gap-10 p-6 border-2 border-red-400 bg-red-200 rounded-lg">
@@ -109,7 +109,7 @@ async function MyIdentity({ params }: { params: { PublicKey: string } }) {
           </div>
         </div>
       )}
-    </WalletConnectChecker>
+    </WalletConnectPipe>
   );
 }
 
