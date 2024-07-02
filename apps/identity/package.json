@@ -17,6 +17,7 @@
     "@solana/web3.js": "^1.93.2",
     "@types/bs58": "^4.0.4",
     "@types/jsonwebtoken": "8.5.1",
+    "axios": "^1.7.2",
     "bs58": "^6.0.0",
     "jsonwebtoken": "8.5.1",
     "lucide-react": "^0.399.0",
