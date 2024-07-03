@@ -6,9 +6,9 @@ export default async function Home() {
       <div className="bg-orange-400 main-body text-white">
         <div className="text-6xl pl-52 pt-40 pb-5 flex flex-col gap-4">
           <div className="underline underline-offset-8">
-            Identity Center for Blockchain Based E-Voting
+            Home of Blockchain Based E-Voting
           </div>
-          <div className="text-4xl text-black">
+          <div className="text-4xl text-gray-300">
             A secure, transparent, and tamper-proof voting system
           </div>
         </div>
