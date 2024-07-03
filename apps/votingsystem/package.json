@@ -12,6 +12,7 @@
     "@aws-sdk/client-s3": "^3.609.0",
     "@aws-sdk/s3-presigned-post": "^3.609.0",
     "@kinde-oss/kinde-auth-nextjs": "^2.3.3",
+    "@solana-developers/helpers": "^2.3.0",
     "@solana/spl-token": "^0.4.7",
     "@solana/wallet-adapter-base": "^0.9.23",
     "@solana/wallet-adapter-react": "^0.15.35",

@@ -2708,6 +2708,15 @@
     "@smithy/types" "^3.3.0"
     tslib "^2.6.2"
 
+"@solana-developers/helpers@^2.3.0":
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/@solana-developers/helpers/-/helpers-2.3.0.tgz#a5c56ead7ea364bfc7afe101e3603410202268c7"
+  integrity sha512-OVdm/RJ9OMI23AnBYX/8UWuNtHRUxaXRUzhXo4WRtXYPHdQ+jTFS2TsjKSJ/F3a0kUZ6nN0b5TekFZvqYF0Qdg==
+  dependencies:
+    "@solana/web3.js" "^1"
+    bs58 "^5.0.0"
+    dotenv "^16.3.1"
+
 "@solana-mobile/mobile-wallet-adapter-protocol-web3js@^2.1.2":
   version "2.1.3"
   resolved "https://registry.yarnpkg.com/@solana-mobile/mobile-wallet-adapter-protocol-web3js/-/mobile-wallet-adapter-protocol-web3js-2.1.3.tgz#34da335bc69b6fb0abeadee3f0672841d4f9d688"
@@ -2957,7 +2966,7 @@
     "@solana/wallet-standard-core" "^1.1.1"
     "@solana/wallet-standard-wallet-adapter" "^1.1.2"
 
-"@solana/web3.js@^1.32.0":
+"@solana/web3.js@^1", "@solana/web3.js@^1.32.0":
   version "1.94.0"
   resolved "https://registry.yarnpkg.com/@solana/web3.js/-/web3.js-1.94.0.tgz#f662ce046f59cb294e8304beeb4d549c3ff05d73"
   integrity sha512-wMiBebzu5I2fTSz623uj6VXpWFhl0d7qJKqPFK2I4IBLTNUdv+bOeA4H7OBM7Gworv7sOvB3xibRql6l61MeqA==
@@ -4282,6 +4291,11 @@ dotenv@16.0.3:
   version "16.0.3"
   resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-16.0.3.tgz#115aec42bac5053db3c456db30cc243a5a836a07"
   integrity sha512-7GO6HghkA5fYG9TYnNxi14/7K9f5occMlp3zXAuSxn7CKCxt9xbNWG7yF8hTCSUchlfWSe3uLmlPfigevRItzQ==
+
+dotenv@^16.3.1:
+  version "16.4.5"
+  resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-16.4.5.tgz#cdd3b3b604cb327e286b4762e13502f717cb099f"
+  integrity sha512-ZmdL2rui+eB2YwhsWzjInR8LldtZHGDoQ1ugH85ppHKwpUHL7j7rN0Ti9NCnGiQbhaZ11FpR+7ao1dNsmduNUg==
 
 eastasianwidth@^0.2.0:
   version "0.2.0"

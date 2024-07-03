@@ -9,34 +9,19 @@ async function main() {
       role: "ADMIN",
     },
   });
-  const activevoting = await prisma.activeVotingLevels.create({
-    data: {
-      LevelName: "National",
-      status: "APPROVED",
-    },
-  });
-  const candidates = await prisma.candidates.createMany({
+  const activevoting = await prisma.activeVotingLevels.createMany({
     data: [
       {
-        name: "CAN_1",
-        statement: "lorem ipsum...",
-        image: "https://dalrhzyq3imlu.cloudfront.net/devote/candidates/me.jpg",
-        levelId: activevoting.id,
-        WalletAddress: "7mpcxFG5CURhM266pWQvqoof55fc3vdRjGheXAW7P3D2",
+        LevelName: "National",
+        status: "APPROVED",
       },
       {
-        name: "CAN_2",
-        statement: "bbbbbbblaaaaaa...",
-        image: "https://dalrhzyq3imlu.cloudfront.net/devote/candidates/me.jpg",
-        levelId: activevoting.id,
-        WalletAddress: "3XY4miR949BxoCrfxueidiF3pTEqcY5NyBV49NPZWrqz",
+        LevelName: "State",
+        status: "APPROVED",
       },
       {
-        name: "CAN_3",
-        statement: "3rd candidate statement",
-        image: "https://dalrhzyq3imlu.cloudfront.net/devote/candidates/me.jpg",
-        levelId: activevoting.id,
-        WalletAddress: "9RCMoa6J6jCqVEiZTgW3HMQH2QoUPVLxfUwx7fk1cNya",
+        LevelName: "Ward",
+        status: "APPROVED",
       },
     ],
   });

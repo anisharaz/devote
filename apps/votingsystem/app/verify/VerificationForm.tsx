@@ -32,7 +32,7 @@ function VerificationForm() {
       setLoading(true);
       const res = await VerifyVoter({
         Certificate: fileContent,
-        PublicKey: publicKey?.toBase58() as string,
+        PublicKey: publicKey?.toString() as string,
         Aadhar: aadhar,
       });
       if (res.success) {

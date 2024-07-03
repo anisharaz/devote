@@ -14,9 +14,16 @@ export function HomePageMainAction() {
       <Link href={"/voting"}>
         <Button size={"lg"}>Vote A Candidate</Button>
       </Link>
-      <Button size={"lg"}>
-        <Link href={"/downloadidentity"}>Download ID Certificate</Link>
-      </Button>
+      {connected && (
+        <>
+          <Link href={"/downloadidentity"}>
+            <Button size={"lg"}>Download ID Certificate</Button>
+          </Link>
+          <Link href={"/verify"}>
+            <Button size={"lg"}>Get Voting Token</Button>
+          </Link>
+        </>
+      )}
       {connected ? (
         <div className="flex gap-4">
           <Link href={`/voteridentity/${publicKey}`}>

@@ -5,6 +5,7 @@ import {
   generateDigitalSignature,
   validateDigitalSignature,
 } from "../lib/functions";
+import { GetTokenBalance, SendVotingToken } from "../lib/solana";
 
 type VoterData = {
   name: string;
@@ -126,6 +127,30 @@ export async function VerifyVoter({
   });
 
   const VotingCertificate = generateDigitalSignature(JSON.stringify(user));
+
+  const tokens = await GetTokenBalance({
+    publickey: PublicKey,
+    MintAddress: process.env.TOKEN_MINT as string,
+    decimals: "1000000000",
+  });
+  if (tokens > 0) {
+    return Promise.resolve({
+      success: false,
+      msg: "Voter Already Have Verified and has voting tokens",
+      VotingCertificate: "",
+    });
+  }
+  const res = await SendVotingToken({
+    publicKey: PublicKey,
+    amount: "1",
+  });
+  if (!res.success) {
+    return Promise.resolve({
+      success: false,
+      msg: "Token Transection Failed Try Again After Some time",
+      VotingCertificate: "",
+    });
+  }
   const updateuser = await prisma.voters.update({
     where: {
       aadhar: Aadhar,
