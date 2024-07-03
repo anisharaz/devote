@@ -162,3 +162,32 @@ export async function VerifyVotingCert(signature: string) {
     return Promise.resolve(false);
   }
 }
+
+export async function RegisterCandidate(candidateData: {
+  name: string;
+  statement: string;
+  image: string;
+  levelId: string;
+  WalletAddress: string;
+}) {
+  try {
+    const res = await prisma.candidates.create({
+      data: {
+        name: candidateData.name,
+        statement: candidateData.statement,
+        image: candidateData.image,
+        levelId: candidateData.levelId,
+        WalletAddress: candidateData.WalletAddress,
+      },
+    });
+    return Promise.resolve({
+      success: true,
+      msg: "Candidate Registered Successfully",
+    });
+  } catch (error) {
+    return Promise.resolve({
+      success: false,
+      msg: "Candidate Already Exist",
+    });
+  }
+}

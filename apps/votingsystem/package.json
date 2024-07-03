@@ -9,6 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.609.0",
+    "@aws-sdk/s3-presigned-post": "^3.609.0",
     "@kinde-oss/kinde-auth-nextjs": "^2.3.3",
     "@solana/spl-token": "^0.4.7",
     "@solana/wallet-adapter-base": "^0.9.23",
@@ -17,13 +19,15 @@
     "@solana/web3.js": "^1.93.2",
     "@types/bs58": "^4.0.4",
     "@types/jsonwebtoken": "8.5.1",
+    "@types/uuid": "^10.0.0",
     "axios": "^1.7.2",
     "bs58": "^6.0.0",
     "jsonwebtoken": "8.5.1",
     "lucide-react": "^0.399.0",
     "next": "15.0.0-rc.0",
     "react": "19.0.0-rc-f994737d14-20240522",
-    "react-dom": "19.0.0-rc-f994737d14-20240522"
+    "react-dom": "19.0.0-rc-f994737d14-20240522",
+    "uuid": "^10.0.0"
   },
   "devDependencies": {
     "@repo/eslint-config": "*",

@@ -46,7 +46,7 @@ async function NumberOfVotes({
                 jsonrpc: "2.0",
                 id: 1,
                 method: "getTokenAccountBalance",
-                params: [tokenaccount.data[0].result.value[0]?.pubkey],
+                params: [tokenaccount.data[0]?.result?.value[0]?.pubkey],
               },
             ],
           });

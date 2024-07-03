@@ -61,7 +61,7 @@ enum ActiveVotingLevelsStatus {
 model ActiveVotingLevels {
   id         String                   @id @default(cuid())
   LevelName  String
-  status     ActiveVotingLevelsStatus @default(PENDING)
+  status     ActiveVotingLevelsStatus @default(APPROVED)
   candidates candidates[]
 
   @@schema("voting")
@@ -82,7 +82,7 @@ model candidates {
   votes         Int                @default(0)
   levelId       String
   level         ActiveVotingLevels @relation(fields: [levelId], references: [id])
-  status        CandidatesStatus   @default(PENDING)
+  status        CandidatesStatus   @default(VERIFIED)
   WalletAddress String             @unique
 
   @@schema("voting")

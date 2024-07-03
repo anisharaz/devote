@@ -21,7 +21,7 @@ async function Registrar() {
                 <div
                   className="p-4 border flex flex-col gap-2"
                   style={{
-                    width: "500px",
+                    width: "800px",
                   }}
                 >
                   <div>
@@ -45,7 +45,7 @@ async function Registrar() {
         <div
           className="flex justify-center gap-4 p-4 border"
           style={{
-            width: "500px",
+            width: "800px",
           }}
         >
           {isAuthenticatedStatus ? (
@@ -53,6 +53,11 @@ async function Registrar() {
               <Link href={"registrar/registervoter"}>
                 <Button className="text-xl" size={"lg"}>
                   Register A Voter
+                </Button>
+              </Link>
+              <Link href={"registrar/registercandidates"}>
+                <Button className="text-xl" size={"lg"}>
+                  Register A Candidate
                 </Button>
               </Link>
               <Link href={"registrar/viewvotes"}>
