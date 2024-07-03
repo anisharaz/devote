@@ -126,6 +126,14 @@ export async function VerifyVoter({
   });
 
   const VotingCertificate = generateDigitalSignature(JSON.stringify(user));
+  const updateuser = await prisma.voters.update({
+    where: {
+      aadhar: Aadhar,
+    },
+    data: {
+      votingcert: VotingCertificate,
+    },
+  });
 
   return Promise.resolve({
     success: true,
@@ -134,4 +142,23 @@ export async function VerifyVoter({
   });
 }
 
-export async function VerifyVotingCert() {}
+export async function VerifyVotingCert(signature: string) {
+  let voter = await prisma.voters.findUnique({
+    where: {
+      votingcert: signature,
+    },
+  });
+  if (!voter) {
+    return Promise.resolve(false);
+  }
+  voter = Object.assign({}, voter, { votingcert: null });
+  const votingcertverify: boolean = validateDigitalSignature(
+    JSON.stringify(voter),
+    signature
+  );
+  if (votingcertverify) {
+    return Promise.resolve(true);
+  } else {
+    return Promise.resolve(false);
+  }
+}

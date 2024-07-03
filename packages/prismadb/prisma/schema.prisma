@@ -43,6 +43,7 @@ model voters {
   state         String
   city          String
   identitycert  String             @unique
+  votingcert    String?            @unique
   identityjwt   String             @unique
   walletaddress String?            @unique
   verification  VerificationStatus @default(PENDING)

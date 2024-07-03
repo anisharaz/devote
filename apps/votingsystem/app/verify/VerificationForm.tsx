@@ -22,7 +22,6 @@ function VerificationForm() {
     fileReader.onload = (e) => {
       // @ts-ignore
       const content = e.target.result;
-      console.log(content);
       // @ts-ignore
       setFileContent(content);
     };
@@ -42,6 +41,7 @@ function VerificationForm() {
         alert("Voter Verified Successfully");
       } else {
         setError(res.msg);
+        setLoading(false);
       }
     } else {
       alert("Please fill all the fields");
@@ -96,7 +96,7 @@ function VerificationForm() {
                 <Button variant={"secondary"}>
                   <a
                     href={`data:text/plain;charset=utf-8,${VotingCertificate}`}
-                    download={`${aadhar}_voting_certtificate.cert`}
+                    download={`${aadhar}_voting_certtificate.cer`}
                   >
                     Download Voting Certificate
                   </a>

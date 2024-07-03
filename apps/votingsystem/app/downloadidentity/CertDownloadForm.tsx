@@ -69,13 +69,13 @@ function CertDownloadForm() {
             <Button type="submit" variant={"secondary"}>
               <a
                 href={`data:text/plain;charset=utf-8,${cert}`}
-                download={`${aadhar}.cert`}
+                download={`${aadhar}.cer`}
               >
                 Download
               </a>
             </Button>
             <Button>
-              <Link href={"/verify"}>Verify Noew</Link>
+              <Link href={"/verify"}>Verify Now</Link>
             </Button>
           </div>
         </>

@@ -21,10 +21,14 @@ import {
   SignerWalletAdapterProps,
   WalletNotConnectedError,
 } from "@solana/wallet-adapter-base";
+import { VerifyVotingCert } from "../../actions/database";
 function SendToken({ toPublicKey }: { toPublicKey: string }) {
   const { publicKey, signTransaction } = useWallet();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [verified, setVerified] = useState(false);
+  const [certLoading, setCertLoading] = useState(false);
+  const [verificationError, setVerificationError] = useState("");
 
   const configureAndSendCurrentTransaction = async (
     transaction: Transaction,
@@ -95,32 +99,85 @@ function SendToken({ toPublicKey }: { toPublicKey: string }) {
     setLoading(false);
   };
 
+  const fileChange = (e: any) => {
+    setCertLoading(true);
+    const fileReader = new FileReader();
+    const { files } = e.target;
+
+    fileReader.readAsText(files[0], "UTF-8");
+    fileReader.onload = async (e) => {
+      // @ts-ignore
+      const content = e.target.result;
+      console.log(content);
+      const verifyStatus = await VerifyVotingCert(content as string);
+      if (verifyStatus) {
+        setVerified(verifyStatus);
+      } else {
+        setVerified(false);
+        setVerificationError("Invalid Certificate");
+      }
+    };
+    setCertLoading(false);
+  };
   return (
     <div>
-      {loading ? (
-        <Button disabled>
-          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-          Please wait..
-        </Button>
+      {verified ? (
+        loading ? (
+          <Button disabled>
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            Please wait..
+          </Button>
+        ) : (
+          <Button onClick={send}>
+            Vote me{" "}
+            <svg
+              className="rtl:rotate-180 w-3.5 h-3.5 ms-2"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 14 10"
+            >
+              <path
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M1 5h12m0 0L9 1m4 4L9 9"
+              />
+            </svg>
+          </Button>
+        )
       ) : (
-        <Button onClick={send}>
-          Vote me{" "}
-          <svg
-            className="rtl:rotate-180 w-3.5 h-3.5 ms-2"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 14 10"
-          >
-            <path
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M1 5h12m0 0L9 1m4 4L9 9"
-            />
-          </svg>
-        </Button>
+        <div>
+          {certLoading ? (
+            <Button disabled>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Please wait..
+            </Button>
+          ) : (
+            <form>
+              <label
+                htmlFor="certificate"
+                className="block text-lg font-medium text-black"
+              >
+                Enter Voting Certificate
+              </label>
+              <input
+                type="file"
+                id="certificate"
+                onChange={fileChange}
+                accept=".cer"
+                className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+              />
+            </form>
+          )}
+
+          {verificationError && (
+            <div className="border border-black mt-2 text-red-500 rounded-lg p-1">
+              {verificationError}
+            </div>
+          )}
+        </div>
       )}
       {error && (
         <div className="text-green-500 mt-3 break-words">
