@@ -6,7 +6,9 @@ import { Button } from "@repo/ui";
 function KindLogout() {
   return (
     <LogoutLink>
-      <Button size={"lg"}>Logout</Button>
+      <Button size={"lg"} variant={"destructive"} className="text-xl">
+        Logout
+      </Button>
     </LogoutLink>
   );
 }

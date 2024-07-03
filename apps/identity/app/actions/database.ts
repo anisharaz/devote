@@ -133,3 +133,5 @@ export async function VerifyVoter({
     VotingCertificate: VotingCertificate,
   });
 }
+
+export async function VerifyVotingCert() {}

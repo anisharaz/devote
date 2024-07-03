@@ -15,11 +15,9 @@ export default async function Registrar() {
         {(await isAuthenticated()) ? (
           <div>
             {user?.email == process.env.ADMIN_EMAIL ? (
-              <div className="flex flex-col justify-center items-center gap-3">
-                <div>
-                  <Button variant={"secondary"}>
-                    <LogoutLink>Logout</LogoutLink>
-                  </Button>
+              <div className="border p-4 rounded-xl">
+                <div className="text-white text-3xl py-2 underline underline-offset-4">
+                  Register A voter
                 </div>
                 <AdminAction />
               </div>
