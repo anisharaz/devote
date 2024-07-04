@@ -10,8 +10,8 @@ function GetRegistrationVerificationEmailForm() {
   const [aadhar, setAadhar] = useState("");
   const handleSubmit = async (e: any) => {
     e.preventDefault();
+    setError("");
     setLoading(true);
-
     const res = await SendVoterVerificationEmail({
       aadhar: aadhar,
     });

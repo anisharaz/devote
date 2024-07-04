@@ -4,8 +4,10 @@ import { useState } from "react";
 import { GetIdentityCert } from "../actions/database";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
+import { useWallet } from "@solana/wallet-adapter-react";
 
 function CertDownloadForm() {
+  const { signMessage, publicKey } = useWallet();
   const [aadhar, setAadhar] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -24,14 +26,24 @@ function CertDownloadForm() {
             return;
           }
           setLoading(true);
-          const res = await GetIdentityCert(aadhar);
-          if (!res) {
-            setError("Voter is not registered");
+          const signedmsg = await signMessage?.(
+            new TextEncoder().encode(aadhar)
+          );
+          console.log(signedmsg);
+
+          const res = await GetIdentityCert({
+            aadhar: aadhar,
+            publickey: publicKey?.toString() as string,
+            signature: signedmsg as Uint8Array,
+          });
+          if (res.success) {
+            setCert(res.msg);
             setLoading(false);
             return;
+          } else {
+            setError(res.msg);
+            setLoading(false);
           }
-          setCert(res);
-          setLoading(false);
         }}
         className="flex flex-col gap-6"
       >

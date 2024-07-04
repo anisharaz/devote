@@ -11,6 +11,8 @@ import {
   SendNormalMail,
   SendRegistrationVerificationMail,
 } from "../lib/MailGun";
+import nacl from "tweetnacl";
+import { PublicKey } from "@solana/web3.js";
 
 type VoterData = {
   name: string;
@@ -38,49 +40,49 @@ export async function CreateVoter(VoderData: VoterData) {
     process.env.ID_AUTHORITY_PUBLIC_KEY as string
   );
   const IdentityCertificate = generateDigitalSignature(voterJwt);
-  // try {
-  const voter = await prisma.voters.create({
-    data: {
-      name: VoderData.name,
-      email: VoderData.email,
-      phone: VoderData.phone,
-      aadhar: VoderData.aadhar,
-      streetaddress: VoderData.streetaddress,
-      pincode: VoderData.pincode,
-      state: VoderData.state,
-      city: VoderData.city,
-      identitycert: IdentityCertificate,
-      identityjwt: voterJwt,
-    },
-  });
-  const verificationID = uuid();
-  if (voter) {
-    const verification = await prisma.registrationverification.create({
+  try {
+    const voter = await prisma.voters.create({
       data: {
-        voterid: voter.voterid,
-        verificationID: verificationID,
+        name: VoderData.name,
+        email: VoderData.email,
+        phone: VoderData.phone,
+        aadhar: VoderData.aadhar,
+        streetaddress: VoderData.streetaddress,
+        pincode: VoderData.pincode,
+        state: VoderData.state,
+        city: VoderData.city,
+        identitycert: IdentityCertificate,
+        identityjwt: voterJwt,
       },
     });
-  } else {
+    const verificationID = uuid();
+    if (voter) {
+      const verification = await prisma.registrationverification.create({
+        data: {
+          voterid: voter.voterid,
+          verificationID: verificationID,
+        },
+      });
+    } else {
+      return Promise.resolve({
+        success: false,
+        msg: "Verification Error with user",
+      });
+    }
+    await SendRegistrationVerificationMail({
+      to: VoderData.email,
+      href: `${process.env.DEVOTE_DEPLOYMENT_URL as string}/verifyregistration/${verificationID}`,
+    });
+    return Promise.resolve({
+      success: true,
+      msg: "Voter Created Successfully, Verification Mail Sent",
+    });
+  } catch (error) {
     return Promise.resolve({
       success: false,
-      msg: "Verification Error with user",
+      msg: "Voter Already Exist",
     });
   }
-  await SendRegistrationVerificationMail({
-    to: VoderData.email,
-    href: `${process.env.DEVOTE_DEPLOYMENT_URL as string}/verifyregistration/${verificationID}`,
-  });
-  return Promise.resolve({
-    success: true,
-    msg: "Voter Created Successfully, Verification Mail Sent",
-  });
-  // } catch (error) {
-  return Promise.resolve({
-    success: false,
-    msg: "Voter Already Exist",
-  });
-  // }
 }
 
 export async function GetVoter(PublicKey: string) {
@@ -92,16 +94,45 @@ export async function GetVoter(PublicKey: string) {
   return user;
 }
 
-export async function GetIdentityCert(aadhar: string) {
+export async function GetIdentityCert({
+  aadhar,
+  publickey,
+  signature,
+}: {
+  aadhar: string;
+  publickey: string;
+  signature: Uint8Array;
+}) {
   const voter = await prisma.voters.findUnique({
     where: {
       aadhar: aadhar,
     },
   });
-  if (voter) {
-    return Promise.resolve(voter.identitycert);
+  if (!voter) {
+    return Promise.resolve({
+      success: false,
+      msg: "Invalid Aadhar",
+    });
   }
-  return Promise.resolve(null);
+  console.log(signature);
+  const aadharByes = new TextEncoder().encode(aadhar);
+  const result = nacl.sign.detached.verify(
+    aadharByes,
+    // @ts-ignore
+    new Uint8Array(signature.data),
+    new PublicKey(publickey).toBytes()
+  );
+  console.log(result);
+  if (!result) {
+    return Promise.resolve({
+      success: false,
+      msg: "Invalid Signature",
+    });
+  }
+  return Promise.resolve({
+    success: true,
+    msg: voter.identitycert,
+  });
 }
 
 export async function VerifyVoter({
@@ -304,6 +335,12 @@ export async function SendVoterVerificationEmail({
     return Promise.resolve({
       success: false,
       msg: "Invalid Aadhar",
+    });
+  }
+  if (user.verification === "APPROVED") {
+    return Promise.resolve({
+      success: false,
+      msg: "Voter Already Verified",
     });
   }
   const verificationid = user?.registrationverification?.verificationID;
