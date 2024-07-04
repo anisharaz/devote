@@ -24,8 +24,8 @@ function VerificationAction({ verificationId }: { verificationId: string }) {
     } else {
       setError(res.msg);
     }
-
     setLoading(false);
+    window.location.reload();
   };
   return (
     <form onSubmit={handleSubmit}>

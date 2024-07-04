@@ -2,6 +2,8 @@ import WalletConnectPipe from "../../pipes/WalletConnectionPipe";
 import WalletPubKey from "./WalletPubKey";
 import VerificationAction from "./VerificationAction";
 import { prisma } from "@repo/prismadb";
+import Link from "next/link";
+import { Button } from "@repo/ui";
 
 async function RegistrationVerification({
   params,
@@ -20,7 +22,12 @@ async function RegistrationVerification({
       {verificationIDTruth ? (
         verificationIDTruth.verified ? (
           <div className="main-body flex justify-center pt-6">
-            <div className="text-4xl">Already Verified</div>
+            <div className="flex flex-col gap-6 items-center">
+              <div className="text-4xl underline">Already Verified</div>
+              <Link href={"/"}>
+                <Button>Go Back</Button>
+              </Link>
+            </div>
           </div>
         ) : (
           <WalletConnectPipe title="Connect Wallet To proceed Verification">

@@ -38,49 +38,49 @@ export async function CreateVoter(VoderData: VoterData) {
     process.env.ID_AUTHORITY_PUBLIC_KEY as string
   );
   const IdentityCertificate = generateDigitalSignature(voterJwt);
-  try {
-    const voter = await prisma.voters.create({
+  // try {
+  const voter = await prisma.voters.create({
+    data: {
+      name: VoderData.name,
+      email: VoderData.email,
+      phone: VoderData.phone,
+      aadhar: VoderData.aadhar,
+      streetaddress: VoderData.streetaddress,
+      pincode: VoderData.pincode,
+      state: VoderData.state,
+      city: VoderData.city,
+      identitycert: IdentityCertificate,
+      identityjwt: voterJwt,
+    },
+  });
+  const verificationID = uuid();
+  if (voter) {
+    const verification = await prisma.registrationverification.create({
       data: {
-        name: VoderData.name,
-        email: VoderData.email,
-        phone: VoderData.phone,
-        aadhar: VoderData.aadhar,
-        streetaddress: VoderData.streetaddress,
-        pincode: VoderData.pincode,
-        state: VoderData.state,
-        city: VoderData.city,
-        identitycert: IdentityCertificate,
-        identityjwt: voterJwt,
+        voterid: voter.voterid,
+        verificationID: verificationID,
       },
     });
-    const verificationID = uuid();
-    if (voter) {
-      const verification = await prisma.registrationverification.create({
-        data: {
-          voterid: voter.voterid,
-          verificationID: verificationID,
-        },
-      });
-    } else {
-      return Promise.resolve({
-        success: false,
-        msg: "Verification Error with user",
-      });
-    }
-    await SendRegistrationVerificationMail({
-      to: VoderData.email,
-      href: `${process.env.DEVOTE_DEPLOYMENT_URL as string}/verifyregistration/${verificationID}`,
-    });
-    return Promise.resolve({
-      success: true,
-      msg: "Voter Created Successfully, Verification Mail Sent",
-    });
-  } catch (error) {
+  } else {
     return Promise.resolve({
       success: false,
-      msg: "Voter Already Exist",
+      msg: "Verification Error with user",
     });
   }
+  await SendRegistrationVerificationMail({
+    to: VoderData.email,
+    href: `${process.env.DEVOTE_DEPLOYMENT_URL as string}/verifyregistration/${verificationID}`,
+  });
+  return Promise.resolve({
+    success: true,
+    msg: "Voter Created Successfully, Verification Mail Sent",
+  });
+  // } catch (error) {
+  return Promise.resolve({
+    success: false,
+    msg: "Voter Already Exist",
+  });
+  // }
 }
 
 export async function GetVoter(PublicKey: string) {
