@@ -33,20 +33,31 @@ enum VerificationStatus {
 }
 
 model voters {
-  voterid       String             @id @default(cuid())
-  name          String
-  email         String             @unique
-  phone         String             @unique
-  aadhar        String             @unique
-  streetaddress String
-  pincode       String
-  state         String
-  city          String
-  identitycert  String             @unique
-  votingcert    String?            @unique
-  identityjwt   String             @unique
-  walletaddress String?            @unique
-  verification  VerificationStatus @default(PENDING)
+  voterid                  String                    @id @default(cuid())
+  name                     String
+  email                    String                    @unique
+  phone                    String                    @unique
+  aadhar                   String                    @unique
+  streetaddress            String
+  pincode                  String
+  state                    String
+  city                     String
+  identitycert             String                    @unique
+  votingcert               String?                   @unique
+  identityjwt              String                    @unique
+  walletaddress            String?                   @unique
+  verification             VerificationStatus        @default(PENDING)
+  registrationverification registrationverification?
+
+  @@schema("identity")
+}
+
+model registrationverification {
+  id              String  @id @default(cuid())
+  voterid         String  @unique
+  voteridRelation voters  @relation(fields: [voterid], references: [voterid])
+  verificationID  String  @unique
+  verified        Boolean @default(false)
 
   @@schema("identity")
 }

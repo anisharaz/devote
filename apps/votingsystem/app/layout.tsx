@@ -32,6 +32,12 @@ export default function RootLayout({
         <WalletContext>
           <NavBar>
             <div className="flex gap-2 justify-center items-center">
+              <Link href={"/voting"}>
+                <Button>Vote A Candidate</Button>
+              </Link>
+              <Link href={"/getverificationemail"}>
+                <Button>Get Verification Email</Button>
+              </Link>
               <Link href={"/registrar"}>
                 <Button>Registrar</Button>
               </Link>

@@ -11,9 +11,6 @@ export function HomePageMainAction() {
 
   return (
     <>
-      <Link href={"/voting"}>
-        <Button size={"lg"}>Vote A Candidate</Button>
-      </Link>
       {connected && (
         <>
           <Link href={"/downloadidentity"}>

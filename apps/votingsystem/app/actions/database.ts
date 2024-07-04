@@ -6,6 +6,11 @@ import {
   validateDigitalSignature,
 } from "../lib/functions";
 import { GetTokenBalance, SendVotingToken } from "../lib/solana";
+import { v4 as uuid } from "uuid";
+import {
+  SendNormalMail,
+  SendRegistrationVerificationMail,
+} from "../lib/MailGun";
 
 type VoterData = {
   name: string;
@@ -48,9 +53,27 @@ export async function CreateVoter(VoderData: VoterData) {
         identityjwt: voterJwt,
       },
     });
+    const verificationID = uuid();
+    if (voter) {
+      const verification = await prisma.registrationverification.create({
+        data: {
+          voterid: voter.voterid,
+          verificationID: verificationID,
+        },
+      });
+    } else {
+      return Promise.resolve({
+        success: false,
+        msg: "Verification Error with user",
+      });
+    }
+    await SendRegistrationVerificationMail({
+      to: VoderData.email,
+      href: `${process.env.DEVOTE_DEPLOYMENT_URL as string}/verifyregistration/${verificationID}`,
+    });
     return Promise.resolve({
       success: true,
-      msg: "Voter Created Successfully",
+      msg: "Voter Created Successfully, Verification Mail Sent",
     });
   } catch (error) {
     return Promise.resolve({
@@ -215,4 +238,53 @@ export async function RegisterCandidate(candidateData: {
       msg: "Candidate Already Exist",
     });
   }
+}
+
+export async function VerifyRegistration({
+  verificationID,
+  publicKey,
+}: {
+  verificationID: string;
+  publicKey: string;
+}) {
+  const verification = await prisma.registrationverification.findUnique({
+    where: {
+      verificationID: verificationID,
+    },
+    select: {
+      voterid: true,
+    },
+  });
+  if (!verification) {
+    return Promise.resolve({
+      success: false,
+      msg: "Invalid Verification ID",
+    });
+  }
+  const user = await prisma.voters.update({
+    where: {
+      voterid: verification.voterid,
+    },
+    data: {
+      walletaddress: publicKey,
+      verification: "APPROVED",
+    },
+  });
+  const updateRegistrationVerification =
+    await prisma.registrationverification.update({
+      where: {
+        verificationID: verificationID,
+      },
+      data: {
+        verified: true,
+      },
+    });
+  await SendNormalMail({
+    to: user.email,
+    message: "You are Successfully Verified as Voter of Devote",
+  });
+  return Promise.resolve({
+    success: true,
+    msg: "Verification with Wallet Address Successfully",
+  });
 }

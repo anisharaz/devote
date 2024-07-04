@@ -12,5 +12,5 @@ export async function POST(req: Request) {
     }
     return Response.json({ name: voter?.name });
   }
-  return Response.json({ name: "Not Registered" });
+  return Response.json({ name: "No Information" });
 }
