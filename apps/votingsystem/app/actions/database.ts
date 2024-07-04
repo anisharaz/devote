@@ -288,3 +288,31 @@ export async function VerifyRegistration({
     msg: "Verification with Wallet Address Successfully",
   });
 }
+
+export async function SendVoterVerificationEmail({
+  aadhar,
+}: {
+  aadhar: string;
+}) {
+  const user = await prisma.voters.findUnique({
+    where: { aadhar: aadhar },
+    include: {
+      registrationverification: true,
+    },
+  });
+  if (!user) {
+    return Promise.resolve({
+      success: false,
+      msg: "Invalid Aadhar",
+    });
+  }
+  const verificationid = user?.registrationverification?.verificationID;
+  await SendRegistrationVerificationMail({
+    to: user.email,
+    href: `${process.env.DEVOTE_DEPLOYMENT_URL as string}/verifyregistration/${verificationid}`,
+  });
+  return Promise.resolve({
+    success: true,
+    msg: "Verification Email Sent",
+  });
+}

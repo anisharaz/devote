@@ -4,8 +4,8 @@ const transporter = nodemailer.createTransport({
   port: 587,
   secure: false, // Use `true` for port 465, `false` for all other ports
   auth: {
-    user: "postmaster@mail.aaraz.me",
-    pass: "160427abe7cbb4a1e48f4e5a27c85bbb-623e10c8-a0e8c1b7",
+    user: process.env.MAILGUN_SMPT_USER,
+    pass: process.env.MAILGUN_SMPT_PASS,
   },
 });
 
@@ -32,11 +32,15 @@ export async function SendNormalMail({
   to: string;
   message: string;
 }) {
-  const info = await transporter.sendMail({
-    from: `"Devote" <info@mail.aaraz.me>`,
-    to: to,
-    subject: "Verified Voter of Devote",
-    text: message,
-  });
-  return info;
+  try {
+    const info = await transporter.sendMail({
+      from: `"Devote" <info@mail.aaraz.me>`,
+      to: to,
+      subject: "Verified Voter of Devote",
+      text: message,
+    });
+    return info;
+  } catch (error) {
+    console.log(error);
+  }
 }
