@@ -48,6 +48,9 @@ model voters {
   walletaddress            String?                   @unique
   verification             VerificationStatus        @default(PENDING)
   registrationverification registrationverification?
+  votingverification       Boolean                   @default(false)
+  hasvotingtoken           Boolean                   @default(false)
+  hasvoted                 Boolean                   @default(false)
 
   @@schema("identity")
 }

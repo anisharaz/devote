@@ -22,31 +22,43 @@ import { VerifyVotingCert } from "../../actions/database";
 function SendToken({ toPublicKey }: { toPublicKey: string }) {
   const { publicKey, signTransaction } = useWallet();
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [txsignature, setTxsignature] = useState("");
   const [verified, setVerified] = useState(false);
   const [certLoading, setCertLoading] = useState(false);
   const [verificationError, setVerificationError] = useState("");
-
+  const [tsError, setTsError] = useState("");
   const configureAndSendCurrentTransaction = async (
     transaction: Transaction,
     connection: Connection,
     feePayer: PublicKey,
     signTransaction: SignerWalletAdapterProps["signTransaction"]
   ) => {
-    const blockHash = await connection.getLatestBlockhash();
-    transaction.feePayer = feePayer;
-    transaction.recentBlockhash = blockHash.blockhash;
-    const signed = await signTransaction(transaction);
-    const signature = await connection.sendRawTransaction(signed.serialize());
-    await connection.confirmTransaction({
-      blockhash: blockHash.blockhash,
-      lastValidBlockHeight: blockHash.lastValidBlockHeight,
-      signature,
-    });
-    return signature;
+    try {
+      const blockHash = await connection.getLatestBlockhash();
+      transaction.feePayer = feePayer;
+      transaction.recentBlockhash = blockHash.blockhash;
+      const signed = await signTransaction(transaction);
+      const signature = await connection.sendRawTransaction(signed.serialize());
+      await connection.confirmTransaction({
+        blockhash: blockHash.blockhash,
+        lastValidBlockHeight: blockHash.lastValidBlockHeight,
+        signature,
+      });
+      return {
+        success: true,
+        signature: signature,
+        msg: "Transection Successful",
+      };
+    } catch (error) {
+      return {
+        success: false,
+        signature: "",
+        msg: "Transection Failed",
+      };
+    }
   };
   const send = async () => {
-    setError("");
+    setTxsignature("");
     setLoading(true);
     const mintToken = new PublicKey(
       "J7PEVpHoy8ZM4kaXtHFwAHb8mwQWKZyM8UHHZUrFJ1u9"
@@ -82,14 +94,18 @@ function SendToken({ toPublicKey }: { toPublicKey: string }) {
       )
     );
     const transaction = new Transaction().add(...transactionInstructions);
-    const signature = await configureAndSendCurrentTransaction(
+    const res = await configureAndSendCurrentTransaction(
       transaction,
       conn,
       publicKey as PublicKey,
       signTransaction as SignerWalletAdapterProps["signTransaction"]
     );
-    alert("Voted Successful");
-    setError(signature);
+    if (res.success) {
+      setTxsignature(res.signature);
+      alert(res.msg);
+    } else {
+      setTsError(res.msg);
+    }
     setLoading(false);
   };
 
@@ -103,12 +119,16 @@ function SendToken({ toPublicKey }: { toPublicKey: string }) {
       // @ts-ignore
       const content = e.target.result;
       console.log(content);
-      const verifyStatus = await VerifyVotingCert(content as string);
-      if (verifyStatus) {
-        setVerified(verifyStatus);
+      const verifyStatus = await VerifyVotingCert(
+        content as string,
+        publicKey?.toString() as string
+      );
+      if (verifyStatus.success) {
+        setVerified(true);
+        alert(verifyStatus.msg);
       } else {
         setVerified(false);
-        setVerificationError("Invalid Certificate");
+        setVerificationError(verifyStatus.msg);
       }
     };
     setCertLoading(false);
@@ -173,15 +193,18 @@ function SendToken({ toPublicKey }: { toPublicKey: string }) {
           )}
         </div>
       )}
-      {error && (
+      {txsignature && (
         <div className="text-green-500 mt-3 break-words">
           <a
-            href={`https://explorer.solana.com/tx/${error}?cluster=devnet`}
+            href={`https://explorer.solana.com/tx/${txsignature}?cluster=devnet`}
             target="_blank"
           >
             <Button variant={"ghost"}>View Tx</Button>
           </a>
         </div>
+      )}
+      {tsError && (
+        <div className="text-red-500 mt-3 break-words">{tsError}</div>
       )}
     </div>
   );

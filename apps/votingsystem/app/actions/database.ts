@@ -146,19 +146,6 @@ export async function VerifyVoter({
   Aadhar: string;
   signature: Uint8Array;
 }) {
-  const tokens = await GetTokenBalance({
-    publickey: publicKey,
-    MintAddress: process.env.TOKEN_MINT as string,
-    decimals: "1000000000",
-  });
-  if (tokens > 0) {
-    return Promise.resolve({
-      success: false,
-      msg: "Voter Already Have Verified and has voting tokens",
-      VotingCertificate: "",
-    });
-  }
-
   const voter = await prisma.voters.findUnique({
     where: {
       aadhar: Aadhar,
@@ -168,6 +155,19 @@ export async function VerifyVoter({
     return Promise.resolve({
       success: false,
       msg: "Invalid Aadhar",
+      VotingCertificate: "",
+    });
+  }
+
+  const tokens = await GetTokenBalance({
+    publickey: publicKey,
+    MintAddress: process.env.TOKEN_MINT as string,
+    decimals: "1000000000",
+  });
+  if (tokens > 0 && voter.hasvotingtoken) {
+    return Promise.resolve({
+      success: false,
+      msg: "Voter Already Have Verified and has voting tokens",
       VotingCertificate: "",
     });
   }
@@ -218,6 +218,8 @@ export async function VerifyVoter({
     },
     data: {
       votingcert: VotingCertificate,
+      votingverification: true,
+      hasvotingtoken: true,
     },
   });
 
@@ -228,24 +230,44 @@ export async function VerifyVoter({
   });
 }
 
-export async function VerifyVotingCert(signature: string) {
+export async function VerifyVotingCert(signature: string, publickey: string) {
   let voter = await prisma.voters.findUnique({
     where: {
       votingcert: signature,
     },
   });
   if (!voter) {
-    return Promise.resolve(false);
+    return Promise.resolve({
+      success: false,
+      msg: "Invalid Certificate",
+    });
   }
-  voter = Object.assign({}, voter, { votingcert: null });
+  voter = Object.assign({}, voter, {
+    votingcert: null,
+    votingverification: false,
+    hasvotingtoken: false,
+  });
   const votingcertverify: boolean = validateDigitalSignature(
     JSON.stringify(voter),
     signature
   );
   if (votingcertverify) {
-    return Promise.resolve(true);
+    if (voter.walletaddress === publickey) {
+      return Promise.resolve({
+        success: true,
+        msg: "Certificate Validation Successfully",
+      });
+    } else {
+      return Promise.resolve({
+        success: false,
+        msg: "Invalid Wallet connected",
+      });
+    }
   } else {
-    return Promise.resolve(false);
+    return Promise.resolve({
+      success: false,
+      msg: "Invalid Certificate",
+    });
   }
 }
 
