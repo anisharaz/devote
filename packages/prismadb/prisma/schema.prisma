@@ -11,7 +11,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = "postgresql://postgres:password@192.168.122.2:5432/postgres"
+  url      = "postgresql://postgres:password@11.0.0.50:5432/postgres"
   schemas  = ["identity", "verification", "voting"]
 }
 

@@ -17,7 +17,7 @@ RUN turbo prune web --docker
 # Add lockfile and package.json's of isolated subworkspace
 FROM base AS installer
 RUN apk update
-RUN apk add --no-cache libc6-compat
+RUN apk add --no-cache libc6-compat 
 WORKDIR /app
 
 # First install the dependencies (as they change less often)
@@ -28,6 +28,7 @@ RUN yarn install
 
 # Build the project
 COPY --from=builder /app/out/full/ .
+RUN cd ./packages/prismadb && npx prisma generate && cd ../..
 RUN yarn turbo run build --filter=web...
 
 FROM base AS runner
