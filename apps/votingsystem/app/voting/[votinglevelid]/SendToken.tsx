@@ -17,10 +17,7 @@ import {
   getAccount,
   getAssociatedTokenAddress,
 } from "@solana/spl-token";
-import {
-  SignerWalletAdapterProps,
-  WalletNotConnectedError,
-} from "@solana/wallet-adapter-base";
+import { SignerWalletAdapterProps } from "@solana/wallet-adapter-base";
 import { VerifyVotingCert } from "../../actions/database";
 function SendToken({ toPublicKey }: { toPublicKey: string }) {
   const { publicKey, signTransaction } = useWallet();
@@ -51,9 +48,6 @@ function SendToken({ toPublicKey }: { toPublicKey: string }) {
   const send = async () => {
     setError("");
     setLoading(true);
-    if (!publicKey || !signTransaction) {
-      throw new WalletNotConnectedError();
-    }
     const mintToken = new PublicKey(
       "J7PEVpHoy8ZM4kaXtHFwAHb8mwQWKZyM8UHHZUrFJ1u9"
     );
@@ -62,7 +56,7 @@ function SendToken({ toPublicKey }: { toPublicKey: string }) {
     const transactionInstructions: TransactionInstruction[] = [];
     const associatedTokenFrom = await getAssociatedTokenAddress(
       mintToken,
-      publicKey
+      publicKey as PublicKey
     );
     const fromAccount = await getAccount(conn, associatedTokenFrom);
     const associatedTokenTo = await getAssociatedTokenAddress(
@@ -72,7 +66,7 @@ function SendToken({ toPublicKey }: { toPublicKey: string }) {
     if (!(await conn.getAccountInfo(associatedTokenTo))) {
       transactionInstructions.push(
         createAssociatedTokenAccountInstruction(
-          publicKey,
+          publicKey as PublicKey,
           associatedTokenTo,
           recipientAddress,
           mintToken
@@ -83,7 +77,7 @@ function SendToken({ toPublicKey }: { toPublicKey: string }) {
       createTransferInstruction(
         fromAccount.address, // source
         associatedTokenTo, // dest
-        publicKey,
+        publicKey as PublicKey,
         1000000000
       )
     );
@@ -91,8 +85,8 @@ function SendToken({ toPublicKey }: { toPublicKey: string }) {
     const signature = await configureAndSendCurrentTransaction(
       transaction,
       conn,
-      publicKey,
-      signTransaction
+      publicKey as PublicKey,
+      signTransaction as SignerWalletAdapterProps["signTransaction"]
     );
     alert("Voted Successful");
     setError(signature);

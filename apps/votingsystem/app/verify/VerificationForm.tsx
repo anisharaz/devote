@@ -8,7 +8,7 @@ import { VerifyVoter } from "../actions/database";
 import { Loader2 } from "lucide-react";
 
 function VerificationForm() {
-  const { publicKey, connected } = useWallet();
+  const { publicKey, connected, signMessage } = useWallet();
   const [fileContent, setFileContent] = useState("");
   const [loading, setLoading] = useState(false);
   const [aadhar, setAadhar] = useState("");
@@ -30,15 +30,21 @@ function VerificationForm() {
     e.preventDefault();
     if (fileContent && aadhar && publicKey) {
       setLoading(true);
+      const signedmsg = await signMessage?.(
+        new TextEncoder().encode(fileContent)
+      );
       const res = await VerifyVoter({
         Certificate: fileContent,
-        PublicKey: publicKey?.toString() as string,
+        publicKey: publicKey?.toString() as string,
         Aadhar: aadhar,
+        signature: signedmsg as Uint8Array,
       });
       if (res.success) {
         setVotingCertificate(res.VotingCertificate);
         setLoading(false);
-        alert("Voter Verified Successfully");
+        alert(
+          "Voter Verified Successfully & token has been sent to your wallet"
+        );
       } else {
         setError(res.msg);
         setLoading(false);

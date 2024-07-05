@@ -2,7 +2,7 @@ import { getOrCreateAssociatedTokenAccount, mintTo } from "@solana/spl-token";
 import { Connection, Keypair, PublicKey, clusterApiUrl } from "@solana/web3.js";
 import axios from "axios";
 export const conn = new Connection(clusterApiUrl("devnet"));
-
+import bs58 from "bs58";
 export async function SendVotingToken({
   publicKey,
   amount,
@@ -12,11 +12,8 @@ export async function SendVotingToken({
 }) {
   const tokenMintAccount = new PublicKey(process.env.TOKEN_MINT as string);
   const recipient = new PublicKey(publicKey);
-
-  const signer = new Keypair({
-    publicKey: new TextEncoder().encode(process.env.MAIN_PUB as string),
-    secretKey: new TextEncoder().encode(process.env.MAIN_PRIV as string),
-  });
+  const SecretKeyByteArray = bs58.decode(process.env.MAIN_PRIV as string);
+  const signer = Keypair.fromSecretKey(SecretKeyByteArray);
   const tokenAccount = await getOrCreateAssociatedTokenAccount(
     conn,
     signer,

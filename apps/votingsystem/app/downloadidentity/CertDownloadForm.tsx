@@ -65,7 +65,9 @@ function CertDownloadForm() {
             Please wait..
           </Button>
         ) : (
-          <Button type="submit">Get Certificate</Button>
+          <Button type="submit" disabled={cert != ""}>
+            Get Certificate
+          </Button>
         )}
       </form>
       {error && (
@@ -76,7 +78,9 @@ function CertDownloadForm() {
       {cert && (
         <>
           <br />
-          <div className="text-2xl text-white">Download Before Verify</div>
+          <div className="text-2xl text-red-500 rounded-xl bg-yellow-200 border p-1 my-2">
+            Download Before Verify
+          </div>
           <div className="flex gap-4">
             <Button type="submit" variant={"secondary"}>
               <a

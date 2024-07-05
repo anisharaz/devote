@@ -137,19 +137,31 @@ export async function GetIdentityCert({
 
 export async function VerifyVoter({
   Certificate,
-  PublicKey,
+  publicKey,
   Aadhar,
+  signature,
 }: {
   Certificate: string;
-  PublicKey: string;
+  publicKey: string;
   Aadhar: string;
+  signature: Uint8Array;
 }) {
+  const tokens = await GetTokenBalance({
+    publickey: publicKey,
+    MintAddress: process.env.TOKEN_MINT as string,
+    decimals: "1000000000",
+  });
+  if (tokens > 0) {
+    return Promise.resolve({
+      success: false,
+      msg: "Voter Already Have Verified and has voting tokens",
+      VotingCertificate: "",
+    });
+  }
+
   const voter = await prisma.voters.findUnique({
     where: {
       aadhar: Aadhar,
-    },
-    select: {
-      identityjwt: true,
     },
   });
   if (!voter) {
@@ -159,6 +171,7 @@ export async function VerifyVoter({
       VotingCertificate: "",
     });
   }
+
   const certverify: boolean = validateDigitalSignature(
     voter.identityjwt,
     Certificate
@@ -170,32 +183,26 @@ export async function VerifyVoter({
       VotingCertificate: "",
     });
   }
-  const user = await prisma.voters.update({
-    where: {
-      aadhar: Aadhar,
-    },
-    data: {
-      walletaddress: PublicKey,
-      verification: "APPROVED",
-    },
-  });
 
-  const VotingCertificate = generateDigitalSignature(JSON.stringify(user));
-
-  const tokens = await GetTokenBalance({
-    publickey: PublicKey,
-    MintAddress: process.env.TOKEN_MINT as string,
-    decimals: "1000000000",
-  });
-  if (tokens > 0) {
+  const CertificateByes = new TextEncoder().encode(Certificate);
+  const result = nacl.sign.detached.verify(
+    CertificateByes,
+    // @ts-ignore
+    new Uint8Array(signature.data),
+    new PublicKey(voter.walletaddress as string).toBytes()
+  );
+  if (!result) {
     return Promise.resolve({
       success: false,
-      msg: "Voter Already Have Verified and has voting tokens",
+      msg: "Invalid wallet, Use the wallet you used for registration",
       VotingCertificate: "",
     });
   }
+
+  const VotingCertificate = generateDigitalSignature(JSON.stringify(voter));
+
   const res = await SendVotingToken({
-    publicKey: PublicKey,
+    publicKey: publicKey,
     amount: "1",
   });
   if (!res.success) {
@@ -216,7 +223,7 @@ export async function VerifyVoter({
 
   return Promise.resolve({
     success: true,
-    msg: "Voter Verified",
+    msg: "Verification Successfully, Voting token has been sent",
     VotingCertificate: VotingCertificate,
   });
 }
