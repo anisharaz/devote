@@ -1,39 +1,31 @@
 FROM node:18-alpine AS base
 
+
 FROM base AS builder
 RUN apk update
 RUN apk add --no-cache libc6-compat
-# Set working directory
 WORKDIR /app
-# Replace <your-major-version> with the major version installed in your repository. For example:
-# RUN yarn global add turbo@^2
 RUN yarn global add turbo@^2
 COPY . .
-
-# Generate a partial monorepo with a pruned lockfile for a target workspace.
-# Assuming "web" is the name entered in the project's package.json: { name: "web" }
 RUN turbo prune web --docker
 
-# Add lockfile and package.json's of isolated subworkspace
 FROM base AS installer
+ENV KINDE_ISSUER_URL ${KINDE_ISSUER_URL}
+ENV KINDE_CLIENT_ID ${KINDE_CLIENT_ID}
+ENV KINDE_CLIENT_SECRET ${KINDE_CLIENT_SECRET}
 RUN apk update
 RUN apk add --no-cache libc6-compat 
 WORKDIR /app
-
-# First install the dependencies (as they change less often)
 COPY .gitignore .gitignore
 COPY --from=builder /app/out/json/ .
 COPY --from=builder /app/out/yarn.lock ./yarn.lock
 RUN yarn install
-
-# Build the project
 COPY --from=builder /app/out/full/ .
 RUN cd ./packages/prismadb && npx prisma generate && cd ../..
 RUN yarn turbo run build --filter=web...
 
 FROM base AS runner
 WORKDIR /app
-
 ENV NODE_ENV production
 ENV NEXT_TELEMETRY_DISABLED 1
 RUN addgroup --system --gid 1001 app
