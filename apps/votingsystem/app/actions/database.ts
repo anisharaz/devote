@@ -57,7 +57,7 @@ export async function CreateVoter(VoderData: VoterData) {
     });
     const verificationID = uuid();
     if (voter) {
-      const verification = await prisma.registrationverification.create({
+      await prisma.registrationverification.create({
         data: {
           voterid: voter.voterid,
           verificationID: verificationID,
@@ -212,7 +212,7 @@ export async function VerifyVoter({
       VotingCertificate: "",
     });
   }
-  const updateuser = await prisma.voters.update({
+  await prisma.voters.update({
     where: {
       aadhar: Aadhar,
     },
@@ -279,7 +279,7 @@ export async function RegisterCandidate(candidateData: {
   WalletAddress: string;
 }) {
   try {
-    const res = await prisma.candidates.create({
+    await prisma.candidates.create({
       data: {
         name: candidateData.name,
         statement: candidateData.statement,
@@ -330,15 +330,14 @@ export async function VerifyRegistration({
       verification: "APPROVED",
     },
   });
-  const updateRegistrationVerification =
-    await prisma.registrationverification.update({
-      where: {
-        verificationID: verificationID,
-      },
-      data: {
-        verified: true,
-      },
-    });
+  await prisma.registrationverification.update({
+    where: {
+      verificationID: verificationID,
+    },
+    data: {
+      verified: true,
+    },
+  });
   await SendNormalMail({
     to: user.email,
     message: "You are Successfully Verified as Voter of Devote",

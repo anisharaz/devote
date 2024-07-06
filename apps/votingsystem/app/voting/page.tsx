@@ -1,6 +1,7 @@
 import { prisma } from "@repo/prismadb";
 import WalletConnectPipe from "../pipes/WalletConnectionPipe";
 import Link from "next/link";
+export const dynamic = "force-dynamic";
 async function Voting() {
   const ActiveVotingLevels = await prisma.activeVotingLevels.findMany();
   return (

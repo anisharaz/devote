@@ -1,7 +1,7 @@
 import { GetPreSignedUrl } from "../../lib/AWS";
 import RegisterForm from "./RregisterForm";
 import { prisma } from "@repo/prismadb";
-
+export const dynamic = "force-dynamic";
 async function RegisterCandidate() {
   let AvtiveVotingLevels = await prisma.activeVotingLevels.findMany();
   const AvtiveVotingLevelsNew = AvtiveVotingLevels.map((level) => {
@@ -10,7 +10,7 @@ async function RegisterCandidate() {
       levelid: level.id,
     };
   });
-  const { url, fields, key } = await GetPreSignedUrl();
+  const { url, fields } = await GetPreSignedUrl();
   return (
     <div className="main-body flex justify-center items-center">
       <RegisterForm

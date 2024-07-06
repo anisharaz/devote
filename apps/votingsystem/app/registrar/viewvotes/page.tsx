@@ -5,7 +5,7 @@ import {
 import { prisma } from "@repo/prismadb";
 import { Button } from "@repo/ui";
 import Link from "next/link";
-
+export const dynamic = "force-dynamic";
 async function ViewVotes() {
   const { isAuthenticated } = getKindeServerSession();
   const votinglevels = await prisma.activeVotingLevels.findMany();
