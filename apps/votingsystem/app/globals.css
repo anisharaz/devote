@@ -3,5 +3,5 @@
 @tailwind utilities;
 .main-body {
     min-height: calc(100vh - 4rem);
-    background: radial-gradient(circle, rgb(150, 184, 194) 0%, rgb(231, 2, 227) 100%);
+    background: radial-gradient(circle, rgb(150, 184, 194) 0%, rgb(47, 77, 250) 100%);
 }

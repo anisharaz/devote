@@ -1,4 +1,5 @@
 import { GetPreSignedUrl } from "../../lib/AWS";
+import AuthonticationPipe from "../../pipes/AuthonticationPipe";
 import RegisterForm from "./RregisterForm";
 import { prisma } from "@repo/prismadb";
 export const dynamic = "force-dynamic";
@@ -13,11 +14,13 @@ async function RegisterCandidate() {
   const { url, fields } = await GetPreSignedUrl();
   return (
     <div className="main-body flex justify-center items-center">
-      <RegisterForm
-        level={AvtiveVotingLevelsNew}
-        presignedurl={url}
-        fields={fields}
-      />
+      <AuthonticationPipe AdminCheck={true}>
+        <RegisterForm
+          level={AvtiveVotingLevelsNew}
+          presignedurl={url}
+          fields={fields}
+        />
+      </AuthonticationPipe>
     </div>
   );
 }

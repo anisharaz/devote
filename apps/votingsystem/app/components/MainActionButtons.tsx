@@ -10,19 +10,15 @@ export function HomePageMainAction() {
   const voter = useVoter();
 
   return (
-    <>
-      {connected && (
-        <>
-          <Link href={"/downloadidentity"}>
-            <Button size={"lg"}>Download ID Certificate</Button>
-          </Link>
-          <Link href={"/verify"}>
-            <Button size={"lg"}>Get Voting Token</Button>
-          </Link>
-        </>
-      )}
+    <div className="flex flex-col gap-6">
+      <div>
+        <Link href={"/registrar"}>
+          <Button size={"lg"}>Registrar</Button>
+        </Link>
+      </div>
       {connected ? (
         <div className="flex gap-4">
+          <WalletButton />
           <Link href={`/voteridentity/${publicKey}`}>
             <Button size={"lg"} variant={"secondary"}>
               MY Identity
@@ -39,6 +35,6 @@ export function HomePageMainAction() {
       ) : (
         <WalletButton />
       )}
-    </>
+    </div>
   );
 }
