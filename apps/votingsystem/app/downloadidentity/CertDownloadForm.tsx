@@ -29,8 +29,6 @@ function CertDownloadForm() {
           const signedmsg = await signMessage?.(
             new TextEncoder().encode(aadhar)
           );
-          console.log(signedmsg);
-
           const res = await GetIdentityCert({
             aadhar: aadhar,
             publickey: publicKey?.toString() as string,

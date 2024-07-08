@@ -118,7 +118,6 @@ function SendToken({ toPublicKey }: { toPublicKey: string }) {
     fileReader.onload = async (e) => {
       // @ts-ignore
       const content = e.target.result;
-      console.log(content);
       const verifyStatus = await VerifyVotingCert(
         content as string,
         publicKey?.toString() as string

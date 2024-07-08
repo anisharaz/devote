@@ -114,7 +114,6 @@ export async function GetIdentityCert({
       msg: "Invalid Aadhar",
     });
   }
-  console.log(signature);
   const aadharByes = new TextEncoder().encode(aadhar);
   const result = nacl.sign.detached.verify(
     aadharByes,
@@ -122,7 +121,6 @@ export async function GetIdentityCert({
     new Uint8Array(signature.data),
     new PublicKey(publickey).toBytes()
   );
-  console.log(result);
   if (!result) {
     return Promise.resolve({
       success: false,
