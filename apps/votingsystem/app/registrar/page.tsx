@@ -22,7 +22,7 @@ async function Registrar() {
               <div>
                 {isAuthenticatedStatus ? (
                   <div
-                    className="p-4 border flex flex-col gap-2"
+                    className="p-4 border flex flex-col gap-2 bg-zinc-800/50 rounded-lg"
                     style={{
                       width: "800px",
                     }}
@@ -46,7 +46,7 @@ async function Registrar() {
           </div>
           <div className="text-xl pt-4 text-white">ACTIONS</div>
           <div
-            className="flex justify-center gap-4 p-4 border"
+            className="flex justify-center gap-4 p-4 border bg-zinc-800/50 rounded-lg"
             style={{
               width: "800px",
             }}

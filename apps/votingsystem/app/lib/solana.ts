@@ -1,7 +1,9 @@
 import { getOrCreateAssociatedTokenAccount, mintTo } from "@solana/spl-token";
 import { Connection, Keypair, PublicKey, clusterApiUrl } from "@solana/web3.js";
 import axios from "axios";
-export const conn = new Connection(clusterApiUrl("devnet"));
+export const conn = new Connection(
+  "https://devnet.helius-rpc.com/?api-key=6f1ddb75-3936-4f0d-b122-63c6ab6de5d7"
+);
 import bs58 from "bs58";
 export async function SendVotingToken({
   publicKey,

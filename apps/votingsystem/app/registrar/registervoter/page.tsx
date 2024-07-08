@@ -17,7 +17,7 @@ export default async function Registrar() {
           {(await isAuthenticated()) ? (
             <div>
               {user?.email == process.env.ADMIN_EMAIL ? (
-                <div className="border p-4 rounded-xl">
+                <div className="border p-4 rounded-xl bg-zinc-800/10">
                   <div className="text-white text-3xl py-2 underline underline-offset-4">
                     Register A voter
                   </div>

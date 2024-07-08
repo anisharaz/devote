@@ -76,7 +76,10 @@ function RegisterForm({
     }
   };
   return (
-    <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
+    <form
+      className="flex flex-col gap-4 border p-6 rounded-xl bg-zinc-800/10"
+      onSubmit={handleSubmit}
+    >
       <div>
         <label className="text-2xl font-medium text-white" htmlFor="name">
           Name
@@ -94,7 +97,7 @@ function RegisterForm({
       </div>
       <div>
         <label className="text-2xl font-medium text-white" htmlFor="statement">
-          Statement
+          Slogan
         </label>
         <br />
         <input

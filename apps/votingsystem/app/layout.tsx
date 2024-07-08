@@ -32,6 +32,11 @@ export default function RootLayout({
         <WalletContext>
           <NavBar>
             <div className="flex gap-2 justify-center items-center">
+              <Link href={"/registrar"}>
+                <Button size={"lg"} variant={"secondary"}>
+                  Registrar
+                </Button>
+              </Link>
               <Link href={"/actiondashboard"}>
                 <Button size={"lg"} variant={"secondary"}>
                   Actions

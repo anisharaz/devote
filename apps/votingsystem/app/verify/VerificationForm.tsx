@@ -56,10 +56,10 @@ function VerificationForm() {
   return (
     <div>
       <form onSubmit={submitHandler}>
-        <div className="text-2xl rounded-lg border border-red-400 bg-red-200 min-h-56 min-w-80 max-w-prose py-10 px-4">
+        <div className="text-2xl rounded-lg border text-white bg-zinc-800/10 min-h-56 min-w-80 max-w-prose py-10 px-4">
           <label
             htmlFor="certificate"
-            className="block mb-2 text-2xl font-medium text-black"
+            className="block mb-2 text-2xl font-medium"
           >
             Identity Certificate
           </label>
@@ -72,7 +72,7 @@ function VerificationForm() {
           />
           <label
             htmlFor="aadhar"
-            className="block mb-2 mt-4 text-2xl font-medium text-black"
+            className="block mb-2 mt-4 text-2xl font-medium"
           >
             Aadhar Number
           </label>

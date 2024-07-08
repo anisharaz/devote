@@ -8,8 +8,8 @@ async function MyIdentity({ params }: { params: { PublicKey: string } }) {
   return (
     <WalletConnectPipe title="Connect Wallet To View Identity">
       {!voter ? (
-        <div className="main-body flex flex-col items-center p-4 gap-10">
-          <div className="flex flex-col gap-10 p-6 border-2 border-red-400 bg-red-200 rounded-lg">
+        <div className="main-body flex flex-col items-center p-4 gap-10 text-white">
+          <div className="flex flex-col gap-10 p-6 border-2 bg-zinc-800/10 rounded-lg">
             <div className="text-3xl">
               Your are not registered or Verified !
             </div>
@@ -17,9 +17,11 @@ async function MyIdentity({ params }: { params: { PublicKey: string } }) {
               <div className="text-2xl py-4 underline underline-offset-8">
                 If already registered Verify here
               </div>
-              <Button size={"lg"} variant={"default"} className="w-full">
-                <Link href={"/verify"}>Verify Here</Link>
-              </Button>
+              <Link href={"/verify"}>
+                <Button size={"lg"} variant={"default"} className="w-full">
+                  Verify Here
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
