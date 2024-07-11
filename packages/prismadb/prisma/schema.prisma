@@ -10,7 +10,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = "postgresql://postgres:password@192.168.122.2:5432/postgres"
+  url      = env("DB_URL")
   schemas  = ["identity", "verification", "voting"]
 }
 
