@@ -72,6 +72,7 @@ export async function CreateVoter(VoderData: VoterData) {
     await SendRegistrationVerificationMail({
       to: VoderData.email,
       href: `${process.env.DEVOTE_DEPLOYMENT_URL as string}/verifyregistration/${verificationID}`,
+      firstname: VoderData.name,
     });
     return Promise.resolve({
       success: true,
@@ -338,7 +339,7 @@ export async function VerifyRegistration({
   });
   await SendNormalMail({
     to: user.email,
-    message: "You are Successfully Verified as Voter of Devote",
+    publickey: publicKey,
   });
   return Promise.resolve({
     success: true,
@@ -373,6 +374,7 @@ export async function SendVoterVerificationEmail({
   await SendRegistrationVerificationMail({
     to: user.email,
     href: `${process.env.DEVOTE_DEPLOYMENT_URL as string}/verifyregistration/${verificationid}`,
+    firstname: user.name,
   });
   return Promise.resolve({
     success: true,

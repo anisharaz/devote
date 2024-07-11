@@ -1,4 +1,8 @@
+import { render } from "@react-email/components";
 import nodemailer from "nodemailer";
+import RegistrationEmail from "./emails/RegistrationEmail";
+import RegistrationCompletion from "./emails/RegistrationCompletion";
+
 const transporter = nodemailer.createTransport({
   host: "smtp.mailgun.org",
   port: 587,
@@ -12,32 +16,40 @@ const transporter = nodemailer.createTransport({
 export async function SendRegistrationVerificationMail({
   to,
   href,
+  firstname,
 }: {
   to: string;
   href: string;
+  firstname: string;
 }) {
   const info = await transporter.sendMail({
     from: `"Devote" <verify@mail.aaraz.me>`,
     to: to,
-    subject: "Devote Verification",
-    html: `<div style='padding: 20px'><div style='font-size: 14px;margin-bottom: 10px;'>Verify Your Devote Registration</div><a href=${href} target='_blank' style='background-color:#1165ed;padding: 8px 12px;border-radius: 10px;font-size: 14px; color: #ffffff;text-decoration: none;font-weight:bold;'>Verify Here</a></div>`,
+    subject: "Devote registeration Completion",
+    html: render(
+      RegistrationEmail({ userFirstname: firstname, resetPasswordLink: href })
+    ),
   });
   return info;
 }
 
 export async function SendNormalMail({
   to,
-  message,
+  publickey,
 }: {
   to: string;
-  message: string;
+  publickey: string;
 }) {
   try {
     const info = await transporter.sendMail({
       from: `"Devote" <info@mail.aaraz.me>`,
       to: to,
-      subject: "Verified Voter of Devote",
-      text: message,
+      subject: "Your Are Verified User Now",
+      html: render(
+        RegistrationCompletion(
+          `${process.env.DEVOTE_DEPLOYMENT_URL}/voteridentity/${publickey}`
+        )
+      ),
     });
     return info;
   } catch (error) {
