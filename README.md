@@ -11,6 +11,10 @@
 
 # Setting Up the project
 
+> [!IMPORTANT]
+> The project uses [Turbo](https://turbo.build/) to manage monorepo. The ui package inside `/packages/ui/` uses [Tailwind css](https://tailwindcss.com/) and [Shadcn/ui](https://ui.shadcn.com/), so you can make any component in this package and just export that in the index.ts file. Your can see the existing components as reference.
+
+
 Step-1: In root dir `/` run these commands
 ```bash
 yarn install
