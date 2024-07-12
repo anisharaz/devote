@@ -169,7 +169,6 @@ export async function VerifyVoter({
   const tokens = await GetTokenBalance({
     publickey: publicKey,
     MintAddress: process.env.TOKEN_MINT as string,
-    decimals: "1000000000",
   });
   if (tokens > 0 || voter.hasvotingtoken) {
     return Promise.resolve({

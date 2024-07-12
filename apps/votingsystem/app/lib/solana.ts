@@ -1,5 +1,5 @@
 import { SendToken } from "@aaraz/solhelper";
-import { Connection } from "@solana/web3.js";
+import { Connection, PublicKey } from "@solana/web3.js";
 import axios from "axios";
 
 export const conn = new Connection(process.env.RPC_URL as string);
@@ -21,11 +21,9 @@ export async function SendVotingToken({ publicKey }: { publicKey: string }) {
 export async function GetTokenBalance({
   publickey,
   MintAddress,
-  decimals,
 }: {
   publickey: string;
   MintAddress: string;
-  decimals: string;
 }) {
   try {
     const tokenaccount = await axios({
@@ -62,9 +60,15 @@ export async function GetTokenBalance({
         },
       ],
     });
-    return Promise.resolve(
-      balance.data[0].result?.value?.amount / Number(decimals)
+    let MintDetails = await conn.getParsedAccountInfo(
+      new PublicKey(MintAddress)
     );
+    const Devisor = Math.pow(
+      10,
+      // @ts-ignore
+      MintDetails.value?.data.parsed.info.decimals
+    );
+    return Promise.resolve(balance.data[0].result?.value?.amount / Devisor);
   } catch (error) {
     return Promise.reject("Something Went Wrong try Again");
   }

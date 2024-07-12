@@ -9,11 +9,13 @@ import { Loader2 } from "lucide-react";
 
 function VerificationForm() {
   const { publicKey, connected, signMessage } = useWallet();
+
   const [fileContent, setFileContent] = useState("");
   const [loading, setLoading] = useState(false);
   const [aadhar, setAadhar] = useState("");
   const [error, setError] = useState("");
   const [VotingCertificate, setVotingCertificate] = useState("");
+
   const fileChange = (e: any) => {
     const fileReader = new FileReader();
     const { files } = e.target;
