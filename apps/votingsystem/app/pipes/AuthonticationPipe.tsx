@@ -3,6 +3,7 @@ import {
   LoginLink,
 } from "@kinde-oss/kinde-auth-nextjs/server";
 import { Button } from "@repo/ui";
+import KindLogout from "../lib/KindLogut";
 
 async function AuthonticationPipe({
   children,
@@ -19,10 +20,16 @@ async function AuthonticationPipe({
     return (
       <>
         {auth ? (
-          user?.email === process.env.ADMIN_EMAIL || "HardCoded_admin_email" ? (
+          user?.email ===
+          (process.env.ADMIN_EMAIL || "HardCoded_admin_email") ? (
             children
           ) : (
-            <div className="text-3xl font-bold">Not An Admin</div>
+            <>
+              <div className="text-3xl font-bold">
+                Your are not an Admin, Logout and login with admin account
+              </div>
+              <KindLogout />
+            </>
           )
         ) : (
           <div className="text-3xl font-bold flex gap-4 flex-col justify-center items-center">

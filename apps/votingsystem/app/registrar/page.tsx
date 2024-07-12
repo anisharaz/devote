@@ -1,6 +1,6 @@
 import { Button } from "@repo/ui";
 import Link from "next/link";
-import KindLogout from "./KindLogut";
+import KindLogout from "../lib/KindLogut";
 import {
   LoginLink,
   getKindeServerSession,
