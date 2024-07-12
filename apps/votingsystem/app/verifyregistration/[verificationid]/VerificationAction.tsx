@@ -4,6 +4,7 @@ import { VerifyRegistration } from "../../actions/database";
 import { useState } from "react";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { Loader2 } from "lucide-react";
+import WalletConnectPipe from "../../pipes/WalletConnectionPipe";
 
 function VerificationAction({ verificationId }: { verificationId: string }) {
   const [loading, setLoading] = useState(false);
@@ -12,9 +13,6 @@ function VerificationAction({ verificationId }: { verificationId: string }) {
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     setLoading(true);
-    if (!publicKey?.toString()) {
-      alert("Please connect your wallet first");
-    }
     const res = await VerifyRegistration({
       verificationID: verificationId,
       publicKey: publicKey?.toBase58() as string,
@@ -28,21 +26,25 @@ function VerificationAction({ verificationId }: { verificationId: string }) {
     window.location.reload();
   };
   return (
-    <form onSubmit={handleSubmit}>
-      {loading ? (
-        <Button disabled>
-          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-          Please wait..
-        </Button>
-      ) : (
-        <Button variant={"secondary"} className="w-full" type="submit">
-          Verify Now
-        </Button>
-      )}
-      {error && (
-        <div className="mt-2 p-1 bg-white text-red-500 rounded-xl">{error}</div>
-      )}
-    </form>
+    <WalletConnectPipe title="connect wallet to verify your registration">
+      <form onSubmit={handleSubmit}>
+        {loading ? (
+          <Button disabled>
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            Please wait..
+          </Button>
+        ) : (
+          <Button variant={"secondary"} className="w-full" type="submit">
+            Verify Now
+          </Button>
+        )}
+        {error && (
+          <div className="mt-2 p-1 bg-white text-red-500 rounded-xl">
+            {error}
+          </div>
+        )}
+      </form>
+    </WalletConnectPipe>
   );
 }
 

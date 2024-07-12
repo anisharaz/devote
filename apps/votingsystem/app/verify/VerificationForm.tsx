@@ -120,11 +120,6 @@ function VerificationForm() {
               {error}
             </div>
           )}
-          <div className="text-lg mt-4 underline underline-offset-8">
-            Note:Verification involves sending your wallet address along with
-            certificate to add your voting wallet to system. Connect wallet
-            wisely
-          </div>
         </div>
       </form>
     </div>
