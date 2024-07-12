@@ -42,6 +42,7 @@ export default function RootLayout({
                   Actions
                 </Button>
               </Link>
+              <WalletButton />
             </div>
           </NavBar>
           {children}

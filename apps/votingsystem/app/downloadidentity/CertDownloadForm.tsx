@@ -89,7 +89,7 @@ function CertDownloadForm() {
               </a>
             </Button>
             <Button>
-              <Link href={"/verify"}>Verify Now</Link>
+              <Link href={"/verify"}>Verify as voter</Link>
             </Button>
           </div>
         </>

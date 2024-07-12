@@ -1,115 +1,67 @@
 "use client";
-
 import { Button } from "@repo/ui";
-import { useWallet } from "@solana/wallet-adapter-react";
-import {
-  Connection,
-  PublicKey,
-  Transaction,
-  TransactionInstruction,
-} from "@solana/web3.js";
-import { conn } from "../../lib/solana";
+import { useConnection, useWallet } from "@solana/wallet-adapter-react";
+import { Transaction } from "@solana/web3.js";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
 import {
-  createAssociatedTokenAccountInstruction,
-  createTransferInstruction,
-  getAccount,
-  getAssociatedTokenAddress,
-} from "@solana/spl-token";
-import { SignerWalletAdapterProps } from "@solana/wallet-adapter-base";
-import { VerifyVotingCert } from "../../actions/database";
+  UpdateVoterVotingStatus,
+  VerifyVotingCert,
+} from "../../actions/database";
+import { SendTokenTransaction } from "@aaraz/solhelper";
+
 function SendToken({ toPublicKey }: { toPublicKey: string }) {
-  const { publicKey, signTransaction } = useWallet();
+  const { publicKey, sendTransaction } = useWallet();
+  const { connection } = useConnection();
+
   const [loading, setLoading] = useState(false);
   const [txsignature, setTxsignature] = useState("");
   const [verified, setVerified] = useState(false);
   const [certLoading, setCertLoading] = useState(false);
   const [verificationError, setVerificationError] = useState("");
-  const [tsError, setTsError] = useState("");
-  const configureAndSendCurrentTransaction = async (
-    transaction: Transaction,
-    connection: Connection,
-    feePayer: PublicKey,
-    signTransaction: SignerWalletAdapterProps["signTransaction"]
-  ) => {
+  const [txError, setTxError] = useState("");
+
+  async function configureAndSendCurrentTransaction(transaction: Transaction) {
     try {
-      const blockHash = await connection.getLatestBlockhash();
-      transaction.feePayer = feePayer;
-      transaction.recentBlockhash = blockHash.blockhash;
-      const signed = await signTransaction(transaction);
-      const signature = await connection.sendRawTransaction(signed.serialize());
-      await connection.confirmTransaction({
-        blockhash: blockHash.blockhash,
-        lastValidBlockHeight: blockHash.lastValidBlockHeight,
-        signature,
-      });
+      const txsignature = await sendTransaction(transaction, connection);
       return {
         success: true,
-        signature: signature,
+        signature: txsignature,
         msg: "Transection Successful",
       };
     } catch (error) {
       return {
         success: false,
         signature: "",
-        msg: "Transection Failed",
+        msg: "Transection Failed try again",
       };
     }
-  };
-  const send = async () => {
+  }
+
+  async function send() {
     setTxsignature("");
     setLoading(true);
-    const mintToken = new PublicKey(
-      "J7PEVpHoy8ZM4kaXtHFwAHb8mwQWKZyM8UHHZUrFJ1u9"
-    );
-    const recipientAddress = new PublicKey(toPublicKey);
-
-    const transactionInstructions: TransactionInstruction[] = [];
-    const associatedTokenFrom = await getAssociatedTokenAddress(
-      mintToken,
-      publicKey as PublicKey
-    );
-    const fromAccount = await getAccount(conn, associatedTokenFrom);
-    const associatedTokenTo = await getAssociatedTokenAddress(
-      mintToken,
-      recipientAddress
-    );
-    if (!(await conn.getAccountInfo(associatedTokenTo))) {
-      transactionInstructions.push(
-        createAssociatedTokenAccountInstruction(
-          publicKey as PublicKey,
-          associatedTokenTo,
-          recipientAddress,
-          mintToken
-        )
-      );
-    }
-    transactionInstructions.push(
-      createTransferInstruction(
-        fromAccount.address, // source
-        associatedTokenTo, // dest
-        publicKey as PublicKey,
-        1000000000
-      )
-    );
-    const transaction = new Transaction().add(...transactionInstructions);
-    const res = await configureAndSendCurrentTransaction(
-      transaction,
-      conn,
-      publicKey as PublicKey,
-      signTransaction as SignerWalletAdapterProps["signTransaction"]
-    );
+    const transaction = await SendTokenTransaction({
+      SendFrom: publicKey?.toBase58() as string,
+      SendTo: toPublicKey,
+      MintAddress: "J7PEVpHoy8ZM4kaXtHFwAHb8mwQWKZyM8UHHZUrFJ1u9",
+      amount: 1,
+    });
+    const res = await configureAndSendCurrentTransaction(transaction);
     if (res.success) {
+      await UpdateVoterVotingStatus({
+        txsignature: res.signature,
+        walletaddress: publicKey?.toBase58() as string,
+      });
       setTxsignature(res.signature);
       alert(res.msg);
     } else {
-      setTsError(res.msg);
+      setTxError(res.msg);
     }
     setLoading(false);
-  };
+  }
 
-  const fileChange = (e: any) => {
+  function fileChange(e: any) {
     setCertLoading(true);
     const fileReader = new FileReader();
     const { files } = e.target;
@@ -131,7 +83,8 @@ function SendToken({ toPublicKey }: { toPublicKey: string }) {
       }
     };
     setCertLoading(false);
-  };
+  }
+
   return (
     <div>
       {verified ? (
@@ -198,12 +151,12 @@ function SendToken({ toPublicKey }: { toPublicKey: string }) {
             href={`https://explorer.solana.com/tx/${txsignature}?cluster=devnet`}
             target="_blank"
           >
-            <Button variant={"ghost"}>View Tx</Button>
+            <Button variant={"ghost"}>View vote Tx</Button>
           </a>
         </div>
       )}
-      {tsError && (
-        <div className="text-red-500 mt-3 break-words">{tsError}</div>
+      {txError && (
+        <div className="text-red-500 mt-3 break-words">{txError}</div>
       )}
     </div>
   );

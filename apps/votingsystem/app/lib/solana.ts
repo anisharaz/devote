@@ -1,39 +1,20 @@
-import { getOrCreateAssociatedTokenAccount, mintTo } from "@solana/spl-token";
-import { Connection, Keypair, PublicKey, clusterApiUrl } from "@solana/web3.js";
+import { SendToken } from "@aaraz/solhelper";
+import { Connection } from "@solana/web3.js";
 import axios from "axios";
-export const conn = new Connection(
-  "https://devnet.helius-rpc.com/?api-key=6f1ddb75-3936-4f0d-b122-63c6ab6de5d7"
-);
-import bs58 from "bs58";
-export async function SendVotingToken({
-  publicKey,
-  amount,
-}: {
-  publicKey: string;
-  amount: string;
-}) {
-  const tokenMintAccount = new PublicKey(process.env.TOKEN_MINT as string);
-  const recipient = new PublicKey(publicKey);
-  const SecretKeyByteArray = bs58.decode(process.env.MAIN_PRIV as string);
-  const signer = Keypair.fromSecretKey(SecretKeyByteArray);
-  const tokenAccount = await getOrCreateAssociatedTokenAccount(
-    conn,
-    signer,
-    tokenMintAccount,
-    recipient
-  );
-  const recipientAssociatedTokenAccount = new PublicKey(tokenAccount.address);
-  const transactionSignature = await mintTo(
-    conn,
-    signer,
-    tokenMintAccount,
-    recipientAssociatedTokenAccount,
-    signer,
-    Number(amount) * 1000000000
-  );
+
+export const conn = new Connection(process.env.RPC_URL as string);
+
+export async function SendVotingToken({ publicKey }: { publicKey: string }) {
+  const { txsignature } = await SendToken({
+    FromSecretKey: process.env.MAIN_PRIV as string,
+    SendFrom: process.env.MAIN_PUB as string,
+    SendTo: publicKey,
+    amount: 1,
+    MintAddress: process.env.TOKEN_MINT as string,
+  });
   return Promise.resolve({
     success: true,
-    txsignature: transactionSignature,
+    txsignature: txsignature,
   });
 }
 

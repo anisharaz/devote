@@ -10,6 +10,7 @@
     "email": "email dev --dir=./app/lib/emails"
   },
   "dependencies": {
+    "@aaraz/solhelper": "^1.2.1",
     "@aws-sdk/client-s3": "^3.609.0",
     "@aws-sdk/s3-presigned-post": "^3.609.0",
     "@kinde-oss/kinde-auth-nextjs": "^2.3.3",
@@ -18,7 +19,7 @@
     "@solana/wallet-adapter-base": "^0.9.23",
     "@solana/wallet-adapter-react": "^0.15.35",
     "@solana/wallet-adapter-react-ui": "^0.9.35",
-    "@solana/web3.js": "^1.93.2",
+    "@solana/web3.js": "^1.95.0",
     "@types/bs58": "^4.0.4",
     "@types/jsonwebtoken": "8.5.1",
     "@types/nodemailer": "^6.4.15",

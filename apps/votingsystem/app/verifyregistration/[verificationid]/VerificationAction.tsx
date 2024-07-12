@@ -17,7 +17,7 @@ function VerificationAction({ verificationId }: { verificationId: string }) {
     }
     const res = await VerifyRegistration({
       verificationID: verificationId,
-      publicKey: publicKey?.toString() as string,
+      publicKey: publicKey?.toBase58() as string,
     });
     if (res.success) {
       alert(res.msg);

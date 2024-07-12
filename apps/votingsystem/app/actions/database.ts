@@ -5,7 +5,7 @@ import {
   generateDigitalSignature,
   validateDigitalSignature,
 } from "../lib/functions";
-import { GetTokenBalance, SendVotingToken } from "../lib/solana";
+import { conn, GetTokenBalance, SendVotingToken } from "../lib/solana";
 import { v4 as uuid } from "uuid";
 import {
   SendNormalMail,
@@ -158,12 +158,20 @@ export async function VerifyVoter({
     });
   }
 
+  if (voter.hasvoted && !voter.hasvotingtoken) {
+    return Promise.resolve({
+      success: false,
+      msg: "Voter Already Voted",
+      VotingCertificate: "",
+    });
+  }
+
   const tokens = await GetTokenBalance({
     publickey: publicKey,
     MintAddress: process.env.TOKEN_MINT as string,
     decimals: "1000000000",
   });
-  if (tokens > 0 && voter.hasvotingtoken) {
+  if (tokens > 0 || voter.hasvotingtoken) {
     return Promise.resolve({
       success: false,
       msg: "Voter Already Have Verified and has voting tokens",
@@ -202,7 +210,6 @@ export async function VerifyVoter({
 
   const res = await SendVotingToken({
     publicKey: publicKey,
-    amount: "1",
   });
   if (!res.success) {
     return Promise.resolve({
@@ -239,6 +246,12 @@ export async function VerifyVotingCert(signature: string, publickey: string) {
     return Promise.resolve({
       success: false,
       msg: "Invalid Certificate",
+    });
+  }
+  if (voter.hasvoted) {
+    return Promise.resolve({
+      success: false,
+      msg: "You have already voted",
     });
   }
   voter = Object.assign({}, voter, {
@@ -380,4 +393,37 @@ export async function SendVoterVerificationEmail({
     success: true,
     msg: "Verification Email Sent",
   });
+}
+
+export async function UpdateVoterVotingStatus({
+  txsignature,
+  walletaddress,
+}: {
+  txsignature: string;
+  walletaddress: string;
+}) {
+  let limit = 0;
+  while (true) {
+    console.log("run " + limit);
+
+    if (limit == 5) {
+      break;
+    }
+    const transaction = await conn.getSignatureStatus(txsignature);
+    limit++;
+    if (transaction.value?.confirmationStatus === "confirmed") {
+      const voter = await prisma.voters.update({
+        where: {
+          walletaddress: walletaddress,
+        },
+        data: {
+          hasvoted: true,
+          hasvotingtoken: false,
+        },
+      });
+      break;
+    }
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+  }
+  return;
 }

@@ -28,6 +28,7 @@ function VerificationForm() {
   };
   const submitHandler = async (e: any) => {
     e.preventDefault();
+    setError("");
     if (fileContent && aadhar && publicKey) {
       setLoading(true);
       const signedmsg = await signMessage?.(
