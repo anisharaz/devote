@@ -38,12 +38,12 @@ npx prisma db seed
 
 
 Step-3: In dir `/apps/votingsystem/` run these commands
+> [!IMPORTANT]
+> NOTE: add values to env file accordingly
+
 ```bash
 cp .env-example .env
 ```
-
-> [!IMPORTANT]
-> NOTE: add values to env file accordingly
 
 Step-4: In root dir `/` run these commands
 ```bash
